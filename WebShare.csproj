@@ -48,7 +48,7 @@
   <ItemGroup>
     <Compile Include="Server\ContentListing\ContentLister.cs" />
     <Compile Include="Server\Error\ErrorMessage.cs" />
-    <Compile Include="Server\StreamGenerator.cs" />
+    <Compile Include="Server\TemplateGenerator.cs" />
     <Compile Include="WebShare.cs">
       <SubType>Form</SubType>
     </Compile>

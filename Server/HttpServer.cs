@@ -16,6 +16,7 @@ namespace WebShare.Server
     class HttpServer
     {
         private static string DEFAULT_MIME = "application/octet-stream";
+        private static string mimesPath = @"Server\mimes.xml";
 
         public IDictionary<string, string> mimeTypes { get; private set; }
         public string RootDirectory { get; private set; }
@@ -30,7 +31,7 @@ namespace WebShare.Server
 
             mimeTypes = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
 
-            XDocument mimeXml = XDocument.Load(@"Server\mimes.xml");
+            XDocument mimeXml = XDocument.Load(mimesPath);
             foreach (var mime in mimeXml.Element("mimes").Elements())
             {
                 string key = mime.Attribute("extension").Value;
@@ -95,11 +96,10 @@ namespace WebShare.Server
         }
 
         private void serveFile(string requestedFileName, HttpListenerContext context)
-        {
-            string fullFilePath = Path.Combine(RootDirectory, requestedFileName);
-            
+        {   
             try
             {
+                string fullFilePath = Path.Combine(RootDirectory, requestedFileName);
                 Stream input = new FileStream(fullFilePath, FileMode.Open);
                     
                 string fileExtension = Path.GetExtension(requestedFileName).Replace(".", "");
@@ -121,7 +121,7 @@ namespace WebShare.Server
         private void serveError(int errorCode, HttpListenerContext context)
         {
             Stream error = new ErrorMessage(errorCode).getStream();
-            // context.Response.StatusCode = errorCode;
+            context.Response.StatusCode = errorCode;
             serveStream(error, context);
         }
 
