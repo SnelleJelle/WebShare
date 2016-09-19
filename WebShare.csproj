@@ -71,7 +71,7 @@
     <Compile Include="Server\Error\ErrorMessage.cs" />
     <Compile Include="Server\SharedFile.cs" />
     <Compile Include="Server\SharedFolder.cs" />
-    <None Include="Server\SharedItem" />
+    <Compile Include="Server\SharedItem.cs" />
     <Compile Include="Server\TemplateGenerator.cs" />
     <Compile Include="WebShare.cs">
       <SubType>Form</SubType>
