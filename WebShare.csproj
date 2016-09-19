@@ -46,7 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Server\ContentLister.cs" />
+    <Compile Include="Server\ContentListing\ContentLister.cs" />
+    <Compile Include="Server\Error\ErrorMessage.cs" />
+    <Compile Include="Server\StreamGenerator.cs" />
     <Compile Include="WebShare.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -82,6 +84,15 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Server\ContentListing\ContentListing.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Server\Error\Error404.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Server\Error\ErrorBase.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Server\mimes.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
