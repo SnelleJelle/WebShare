@@ -15,12 +15,13 @@ namespace WebShare.Server
 {
     class HttpServer
     {
-        private static string DEFAULT_MIME = "application/octet-stream";
-        private static string mimesPath = @"Server\mimes.xml";
-
-        public IDictionary<string, string> mimeTypes { get; private set; }
         public string RootDirectory { get; private set; }
         public int Port { get; private set; }
+        public bool AllowSharingSubfolders { get; set; }
+
+        private static string DEFAULT_MIME = "application/octet-stream";
+        private static string mimesPath = @"Server\mimes.xml";
+        private IDictionary<string, string> mimeTypes { get; set; }
         private HttpListener listener;
         private Thread serverThread;
 
@@ -90,9 +91,7 @@ namespace WebShare.Server
 
         private void serveContentListing(HttpListenerContext context)
         {
-            Stream input = new ContentLister(this).getContentStream();          
-
-            serveStream(input, context);            
+            serveStream(new ContentLister(this).getContentStream(), context);            
         }
 
         private void serveFile(string requestedFileName, HttpListenerContext context)
