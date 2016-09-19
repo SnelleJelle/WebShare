@@ -67,7 +67,7 @@ namespace WebShare.Server
 
         private void handleRequest(HttpListenerContext context)
         {
-            string requestedFileName = context.Request.Url.AbsolutePath;
+            string requestedFileName = context.Request.Url.LocalPath;
             Debug.Write("Requested: " + requestedFileName + " -> ");
             requestedFileName = requestedFileName.Substring(1);
             
