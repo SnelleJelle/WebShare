@@ -20,11 +20,14 @@ namespace WebShare.Server
         public string RootDirectory { get; private set; }
         public int Port { get; private set; }
 
+
+        public List<SharedFolder> SharedFolders { get; set; } = new List<SharedFolder>();
+        public List<SharedFile> SharedFiles { get; set; } = new List<SharedFile>();
+
         private static string defaultMime = "application/octet-stream";
         private static string mimesPath = @"Server\mimes.xml";
 
         private IDictionary<string, string> mimeTypes { get; set; }
-        
         private HttpListener listener;
         private Thread serverThread;
         private SettingsManager settings = new SettingsManager();
@@ -36,15 +39,9 @@ namespace WebShare.Server
             RootDirectory = rootDirectory;
             Port = port;
 
-            mimeTypes = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+            loadSharedItems();
 
-            XDocument mimeXml = XDocument.Load(mimesPath);
-            foreach (var mime in mimeXml.Element("mimes").Elements())
-            {
-                string key = mime.Attribute("extension").Value;
-                string value = mime.Value;
-                mimeTypes.Add(key, value);
-            }
+            mimeTypes = loadMimeTypes();            
         }
 
         public void Start()
@@ -57,6 +54,24 @@ namespace WebShare.Server
         {
             serverThread.Abort();
             listener.Stop();
+        }
+
+        private void loadSharedItems()
+        {
+
+        }
+
+        private Dictionary<string, string> loadMimeTypes()
+        {
+            Dictionary< string, string> mimes = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+            XDocument mimeXml = XDocument.Load(mimesPath);
+            foreach (var mime in mimeXml.Element("mimes").Elements())
+            {
+                string key = mime.Attribute("extension").Value;
+                string value = mime.Value;
+                mimeTypes.Add(key, value);
+            }
+            return mimes;
         }
 
         private void listen()
