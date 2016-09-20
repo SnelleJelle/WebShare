@@ -27,6 +27,7 @@ namespace WebShare.Server
         private HttpListener listener;
         private Thread serverThread;
         private SettingsManager settings = new SettingsManager();
+        public event EventHandler<PermissionEventArgs> OnPermissionPrompt;
 
         public HttpServer(string rootDirectory, int port)
         {
@@ -89,7 +90,8 @@ namespace WebShare.Server
                     Debug.WriteLine(" -> Blocked");
                     return;
                 }
-            }            
+            }
+            Debug.WriteLine("");
 
             string requestedFileName = context.Request.Url.LocalPath;
             Debug.Write("Requested: " + requestedFileName + " -> ");
@@ -114,25 +116,16 @@ namespace WebShare.Server
 
         private void promptPermissionFor(IPEndPoint client)
         {
-            DialogResult incoming = MessageBox.Show("Allow client?\n" + client.Address + "\n" + Dns.GetHostEntry(client.Address).HostName,
-                "Incoming connection request", MessageBoxButtons.YesNo);
-            if (incoming == DialogResult.Yes)
-            {
-                allowClient(client);
-            }
-            else if (incoming == DialogResult.No)
-            {
-                blockClient(client);
-            }
+            OnPermissionPrompt(this, new PermissionEventArgs { Client = client});            
         }
 
-        private void blockClient(IPEndPoint client)
+        public void BlockClient(IPEndPoint client)
         {
             settings.AddClientToBlockedList(client);
             settings.Save();
         }
 
-        private void allowClient(IPEndPoint client)
+        public void AllowClient(IPEndPoint client)
         {
             settings.AddClientToWhiteList(client);
             settings.Save();
@@ -192,5 +185,10 @@ namespace WebShare.Server
         {
             return File.Exists(Path.Combine(RootDirectory, fileName));
         }
+    }
+
+    public class PermissionEventArgs : EventArgs
+    {
+        public IPEndPoint Client { get; set; }
     }
 }

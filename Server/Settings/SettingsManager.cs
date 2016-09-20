@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Net;
 using System.Xml.Linq;
 
@@ -68,5 +69,10 @@ namespace WebShare.Server.Settings
         {
             settings.Save(filePath);
         }
+    }
+
+    public class PermissionEventArs : EventArgs
+    {
+        public IPEndPoint Client { get; set; }
     }
 }
