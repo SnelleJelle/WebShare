@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace WebShare.Server
 {
-    class SharedFolder : SharedItem
+    class SharedFolder
     {
+        public string Path { get; set; }
+        public bool ShareSubFolders { get; set; }
     }
 }

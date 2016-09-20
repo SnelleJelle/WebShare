@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace WebShare.Server
 {
-    class SharedFile : SharedItem
+    class SharedFile
     {
+        public string Path { get; set; }
     }
 }
