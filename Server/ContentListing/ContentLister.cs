@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WebShare.Server.ContentListing
 {
@@ -12,7 +8,7 @@ namespace WebShare.Server.ContentListing
     {
         public HttpServer Server { get; set; }
 
-        private static IDictionary<string, string> BOOTSTRAP_ICONS = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
+        private static IDictionary<string, string> bootstrapIcons = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
         {
             #region bootstrap icons
             {"file", "glyphicon glyphicon-file"},
@@ -50,28 +46,29 @@ namespace WebShare.Server.ContentListing
         private string getHtmlContentListing()
         {            
             DirectoryInfo dir = new DirectoryInfo(Server.RootDirectory);
-            StringBuilder body = new StringBuilder();
+
+            List<ContentItem> contents = new List<ContentItem>();
 
             foreach (DirectoryInfo subdir in dir.GetDirectories())
             {
-                body.Append(encapsulateFolder(subdir));
+                contents.Add(getContentFromFolder(subdir));
             }
             foreach (FileInfo file in dir.GetFiles())
             {
-                body.Append(encapsulateFile(file));
+                contents.Add(getContentFromFile(file));
             }
-            return encapsulateInTemplate(body.ToString());
+            return renderRazor(contents);
         }
 
-        private string encapsulateFile(FileInfo file)
+        private ContentItem getContentFromFile(FileInfo file)
         {
-            return string.Format("<tr><td><a href=\"/{1}\" ><div>{0} {1}</div></a></td> <td>{2}</td></tr>", getBootstrapIcon(file), file.Name, getFileSizeString(file));
+            return new ContentItem() { Icon = getBootstrapIcon(file), Name = file.Name, Size = getFileSizeString(file) };
         }
 
-        private string encapsulateFolder(DirectoryInfo dir)
+        private ContentItem getContentFromFolder(DirectoryInfo folder)
         {
-            int nrOfContents = dir.GetFiles().Length + dir.GetDirectories().Length;
-            return string.Format("<tr><td><div>{0} <b>{1}</b></div></td> <td>{2}</td></tr>", getFolderIcon(), dir.Name, nrOfContents + " items");
+            int nrOfContents = folder.GetFiles().Length + folder.GetDirectories().Length;
+            return new ContentItem() { Icon = getFolderIcon(), Name = folder.Name, Size = nrOfContents + " items" };
         }
 
         private string getFileSizeString(FileInfo file)
@@ -90,25 +87,25 @@ namespace WebShare.Server.ContentListing
         private string getBootstrapIcon(FileInfo file)
         {
             string extension = file.Extension.Replace(".","").ToLower();
-            string icon = BOOTSTRAP_ICONS.TryGetValue(extension, out icon) ? icon : BOOTSTRAP_ICONS["file"];
+            string icon = bootstrapIcons.TryGetValue(extension, out icon) ? icon : bootstrapIcons["file"];
             
             return getIconHtmlForClass(icon);
         }
 
         private string getIconHtmlForClass(string cssClass)
         {
-            return string.Format("<span class=\"{0}\"></span>", cssClass);
+            return string.Format("<span class=\"{0}\"></span> ", cssClass);
         }
 
         private string getFolderIcon()
         {
-            return getIconHtmlForClass(BOOTSTRAP_ICONS["folder"]);
+            return getIconHtmlForClass(bootstrapIcons["folder"]);
         }
 
         public Stream getContentStream()
         {
             string html = getHtmlContentListing();
-            return GenerateStreamFromString(html);
+            return generateStreamFromString(html);
         }        
     }
 }

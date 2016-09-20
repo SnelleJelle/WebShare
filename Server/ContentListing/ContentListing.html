@@ -30,7 +30,9 @@
                 </tr>
             </thead>
             <tbody>
-                <!--body-->
+                {% for content in model %}
+                    <tr><td><a href="{{ content.Name }}"><div>{{ content.Icon }} {{ content.Name }}</div></a></td> <td>{{ content.Size }}</td></tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
