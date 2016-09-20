@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+   <sharedfolders>
+      <sharedfolder>
+         <path>C:\Users\jelle\Downloads</path>
+         <shareSubfolders>true</shareSubfolders>
+      </sharedfolder>
+   </sharedfolders>
+   <whitelist>
+      <client>
+         <ip>127.0.0.1</ip>
+         <name>bto-jellyHAHAHHA</name>
+      </client>
+   </whitelist>
+  <blockedlist>
+  </blockedlist>
+</settings>
