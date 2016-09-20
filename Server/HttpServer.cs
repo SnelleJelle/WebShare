@@ -22,10 +22,13 @@ namespace WebShare.Server
 
         private static string defaultMime = "application/octet-stream";
         private static string mimesPath = @"Server\mimes.xml";
+
         private IDictionary<string, string> mimeTypes { get; set; }
+        
         private HttpListener listener;
         private Thread serverThread;
         private SettingsManager settings = new SettingsManager();
+
         public event EventHandler<PermissionEventArgs> OnPermissionPrompt;
 
         public HttpServer(string rootDirectory, int port)

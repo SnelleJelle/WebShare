@@ -8,8 +8,8 @@
    </sharedfolders>
    <whitelist>
       <client>
-         <ip>127.0.0.1</ip>
-         <name>bto-jellyHAHAHHA</name>
+         <ip>::1</ip>
+         <name>bto-jelly</name>
       </client>
    </whitelist>
   <blockedlist>
