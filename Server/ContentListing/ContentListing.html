@@ -31,7 +31,7 @@
             </thead>
             <tbody>
                 {% for content in model %}
-                    <tr><td><a href="{{ content.Name }}"><div>{{ content.Icon }} {{ content.Name }}</div></a></td> <td>{{ content.Size }}</td></tr>
+                    <tr><td><a href="{{ content.Name }}"><div>{{ content.Icon }} {{ content.Name }}</div></a></td> <td class="col-md-2">{{ content.Size }}</td></tr>
                 {% endfor %}
             </tbody>
         </table>
