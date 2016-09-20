@@ -10,6 +10,8 @@ using System.Diagnostics;
 using System.Xml.Linq;
 using WebShare.Server.ContentListing;
 using WebShare.Server.Error;
+using System.Windows.Forms;
+using WebShare.Server.Settings;
 
 namespace WebShare.Server
 {
@@ -24,6 +26,7 @@ namespace WebShare.Server
         private IDictionary<string, string> mimeTypes { get; set; }
         private HttpListener listener;
         private Thread serverThread;
+        private SettingsManager settings = new SettingsManager();
 
         public HttpServer(string rootDirectory, int port)
         {
@@ -68,6 +71,26 @@ namespace WebShare.Server
 
         private void handleRequest(HttpListenerContext context)
         {
+            IPEndPoint client = context.Request.RemoteEndPoint;
+            Debug.Write("Incoming connection from: " + client.Address.ToString());
+            if (settings.IsClientBlocked(client))
+            {
+                serveError(401, context);
+                Debug.WriteLine(" -> Blocked");
+                return;
+            }
+
+            if (!settings.IsClientWhiteListed(client))
+            {
+                promptPermissionFor(client);
+                if (settings.IsClientBlocked(client))
+                {
+                    serveError(401, context);
+                    Debug.WriteLine(" -> Blocked");
+                    return;
+                }
+            }            
+
             string requestedFileName = context.Request.Url.LocalPath;
             Debug.Write("Requested: " + requestedFileName + " -> ");
             requestedFileName = requestedFileName.Substring(1);
@@ -87,7 +110,33 @@ namespace WebShare.Server
                 Debug.WriteLine("Content not found");
                 serveError(404, context);
             }        
-        }        
+        }
+
+        private void promptPermissionFor(IPEndPoint client)
+        {
+            DialogResult incoming = MessageBox.Show("Allow client?\n" + client.Address + "\n" + Dns.GetHostEntry(client.Address).HostName,
+                "Incoming connection request", MessageBoxButtons.YesNo);
+            if (incoming == DialogResult.Yes)
+            {
+                allowClient(client);
+            }
+            else if (incoming == DialogResult.No)
+            {
+                blockClient(client);
+            }
+        }
+
+        private void blockClient(IPEndPoint client)
+        {
+            settings.AddClientToBlockedList(client);
+            settings.Save();
+        }
+
+        private void allowClient(IPEndPoint client)
+        {
+            settings.AddClientToWhiteList(client);
+            settings.Save();
+        }
 
         private void serveContentListing(HttpListenerContext context)
         {

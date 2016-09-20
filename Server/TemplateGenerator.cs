@@ -8,7 +8,6 @@ namespace WebShare.Server
 {
     public abstract class TemplateGenerator
     {
-        internal static string templateDelimiter = "<!--body-->";
         internal string templateFile { get; set; }
 
         internal Stream generateStreamFromString(string s)
