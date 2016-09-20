@@ -1,18 +1,17 @@
-﻿using System;
+﻿using DotLiquid;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using WebShare.Server.ContentListing;
 
 namespace WebShare.Server
 {
     public abstract class TemplateGenerator
     {
-        internal static string TEMPLATE_DELIMITER = "<!--body-->";
+        internal static string templateDelimiter = "<!--body-->";
         internal string templateFile { get; set; }
 
-        internal Stream GenerateStreamFromString(string s)
+        internal Stream generateStreamFromString(string s)
         {
             MemoryStream stream = new MemoryStream();
             StreamWriter writer = new StreamWriter(stream);
@@ -22,11 +21,12 @@ namespace WebShare.Server
             return stream;
         }
 
-        internal string encapsulateInTemplate(string body)
+        internal string renderRazor(object contents)
         {
-            string TemplateHtml = File.ReadAllText(templateFile);
-            string[] template = TemplateHtml.Split(new string[] { TEMPLATE_DELIMITER }, StringSplitOptions.None);
-            return template[0] + body + template[1];
+            string templateHtml = File.ReadAllText(templateFile);
+            Template template = Template.Parse(templateHtml);           
+            string result = template.Render(Hash.FromAnonymousObject(new { model = contents }));
+            return result;
         }
     }
 }

@@ -19,7 +19,7 @@ namespace WebShare.Server
         public int Port { get; private set; }
         public bool AllowSharingSubfolders { get; set; }
 
-        private static string DEFAULT_MIME = "application/octet-stream";
+        private static string defaultMime = "application/octet-stream";
         private static string mimesPath = @"Server\mimes.xml";
         private IDictionary<string, string> mimeTypes { get; set; }
         private HttpListener listener;
@@ -103,7 +103,7 @@ namespace WebShare.Server
                     
                 string fileExtension = Path.GetExtension(requestedFileName).Replace(".", "");
                 string mime;
-                context.Response.ContentType = mimeTypes.TryGetValue(fileExtension, out mime) ? mime : DEFAULT_MIME;
+                context.Response.ContentType = mimeTypes.TryGetValue(fileExtension, out mime) ? mime : defaultMime;
                     
                 context.Response.AddHeader("Last-Modified", File.GetLastWriteTime(requestedFileName).ToString("r"));
 

@@ -16,23 +16,13 @@ namespace WebShare.Server.Error
         public ErrorMessage(int errorCode)
         {
             this.ErrorCode = errorCode;
-            templateFile = @"Server\Error\ErrorBase.html";
+            templateFile = string.Format(errortemplate, ErrorCode);
         }
 
         internal Stream getStream()
         {
-            string errorHtml;
-            try
-            {
-                errorHtml = File.ReadAllText(string.Format(errortemplate, ErrorCode));
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine("no template for error: " + ErrorCode);
-            }
-            errorHtml = "error " + ErrorCode;
-            string TemplateHtml = encapsulateInTemplate(errorHtml);
-            return GenerateStreamFromString(TemplateHtml);
+            string html = File.ReadAllText(templateFile);
+            return generateStreamFromString(html);
         }
     }
 }
