@@ -19,7 +19,6 @@ namespace WebShare.Server
     {
         public string RootDirectory { get; private set; }
         public int Port { get; private set; }
-        public bool AllowSharingSubfolders { get; set; }
 
         private static string defaultMime = "application/octet-stream";
         private static string mimesPath = @"Server\mimes.xml";
@@ -66,11 +65,11 @@ namespace WebShare.Server
             while (true)
             {
                 HttpListenerContext context = listener.GetContext();
-                handleRequest(context);
+                handleConnection(context);
             }
         }
 
-        private void handleRequest(HttpListenerContext context)
+        private void handleConnection(HttpListenerContext context)
         {
             IPEndPoint client = context.Request.RemoteEndPoint;
             Debug.Write("Incoming connection from: " + client.Address.ToString());
@@ -91,12 +90,17 @@ namespace WebShare.Server
                     return;
                 }
             }
-            Debug.WriteLine("");
+            Debug.WriteLine(" -> Allowed");
 
+            handleRequest(context);
+        }
+
+        private void handleRequest(HttpListenerContext context)
+        {
             string requestedFileName = context.Request.Url.LocalPath;
             Debug.Write("Requested: " + requestedFileName + " -> ");
             requestedFileName = requestedFileName.Substring(1);
-            
+
             if (string.IsNullOrEmpty(requestedFileName))
             {
                 Debug.WriteLine("Serving content listing");
@@ -111,7 +115,7 @@ namespace WebShare.Server
             {
                 Debug.WriteLine("Content not found");
                 serveError(404, context);
-            }        
+            }
         }
 
         private void promptPermissionFor(IPEndPoint client)
@@ -123,12 +127,14 @@ namespace WebShare.Server
         {
             settings.AddClientToBlockedList(client);
             settings.Save();
+            Debug.WriteLine(" blocked");
         }
 
         public void AllowClient(IPEndPoint client)
         {
             settings.AddClientToWhiteList(client);
             settings.Save();
+            Debug.WriteLine(" whitelisted");
         }
 
         private void serveContentListing(HttpListenerContext context)
