@@ -29,7 +29,7 @@ namespace WebShare.Server.ContentListing
                 }
                 contentFolders.Add(contentFolder);
             }
-            return renderRazor(contentFolders);
+            return renderTemplate(contentFolders);
         }       
 
         public Stream getContentStream()
