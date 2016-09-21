@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Net;
+using System.Net.Sockets;
 using System.Windows.Forms;
 using WebShare.Server;
 using WebShare.Server.Settings;
@@ -24,7 +25,13 @@ namespace WebShare
 
         void OnpErmissionPrompt(object sender, PermissionEventArgs e)
         {
-            DialogResult incoming = MessageBox.Show("Allow client?\n" + e.Client.Address + "\n" + Dns.GetHostEntry(e.Client.Address).HostName,
+            string host = "no hostname found for this client";
+            try
+            {
+                host = Dns.GetHostEntry(e.Client.Address).HostName;
+            }
+            catch (SocketException se) {}
+            DialogResult incoming = MessageBox.Show("Allow client?\n" + e.Client.Address + "\n" + host,
                 "Incoming connection request", MessageBoxButtons.YesNo);
             if (incoming == DialogResult.Yes)
             {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
+using System.Net.Sockets;
 using System.Xml.Linq;
 
 namespace WebShare.Server.Settings
@@ -17,10 +18,17 @@ namespace WebShare.Server.Settings
         }
 
         public void AddClientToWhiteList(IPEndPoint client)
-        {            
+        {
+            string host = "";
+            try
+            {
+                host = Dns.GetHostEntry(client.Address).HostName;
+            }
+            catch (SocketException se) {}
+
             XElement whiteClient = new XElement("client",
                 new XElement("ip", client.Address.ToString()),
-                new XElement("name", Dns.GetHostEntry(client.Address).HostName)
+                new XElement("name", host)
             );
 
             var whiteList = settings.Element("settings").Element("whitelist");
