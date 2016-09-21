@@ -23,7 +23,7 @@ namespace WebShare.Server.Settings
 
             XElement whiteClient = new XElement("client",
                 new XElement("ip", client.Address.ToString()),
-                new XElement("name", host)
+                new XElement("name", getHostname(client))
             );
 
             var whiteList = settings.Element("settings").Element("whitelist");
@@ -34,7 +34,7 @@ namespace WebShare.Server.Settings
         {
             XElement blockedClient = new XElement("client",
                 new XElement("ip", client.Address.ToString()),
-                new XElement("name", Dns.GetHostEntry(client.Address).HostName)
+                new XElement("name", getHostname(client))
             );
 
             var blockedlist = settings.Element("settings").Element("blockedlist");
@@ -47,7 +47,7 @@ namespace WebShare.Server.Settings
             foreach (var whitelisted in whitelist.Elements())
             {
                 if (whitelisted.Element("ip").Value == client.Address.ToString() && 
-                    whitelisted.Element("name").Value == Dns.GetHostEntry(client.Address).HostName)
+                    whitelisted.Element("name").Value == getHostname(client))
                 {
                     return true;
                 }
@@ -61,7 +61,7 @@ namespace WebShare.Server.Settings
             foreach (var blockedClient in blockedlist.Elements())
             {
                 if (blockedClient.Element("ip").Value == client.Address.ToString() &&
-                    blockedClient.Element("name").Value == Dns.GetHostEntry(client.Address).HostName)
+                    blockedClient.Element("name").Value == getHostname(client))
                 {
                     return true;
                 }
@@ -107,7 +107,7 @@ namespace WebShare.Server.Settings
             settings.Save(filePath);
         }
 
-        private void getHostname(IPEndPoint client)
+        private string getHostname(IPEndPoint client)
         {
             string host = "";
             try
