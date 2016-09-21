@@ -1,11 +1,15 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<settings>
-   <sharedfolders>
-      <sharedfolder>
-         <path>C:\Users\jelle\Downloads</path>
-         <shareSubfolders>true</shareSubfolders>
-      </sharedfolder>
-   </sharedfolders>
+<settings>  
+  <sharedFolders>
+    <sharedFolder>
+      <path>C:\Users\jelle\Downloads</path>
+      <alias>Downloads</alias>
+    </sharedFolder>
+    <sharedFolder>
+      <path>C:\Users\jelle\Downloads\torrents\[]Microsoft Office Professional Plus (x64) 2013 Incl  Activator  P2P</path>
+      <alias>ms</alias>
+    </sharedFolder>
+  </sharedFolders>
    <whitelist>
       <client>
          <ip>::1</ip>

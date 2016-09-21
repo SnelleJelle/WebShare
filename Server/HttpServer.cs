@@ -17,12 +17,8 @@ namespace WebShare.Server
 {
     class HttpServer
     {
-        public string RootDirectory { get; private set; }
         public int Port { get; private set; }
-
-
         public List<SharedFolder> SharedFolders { get; set; } = new List<SharedFolder>();
-        public List<SharedFile> SharedFiles { get; set; } = new List<SharedFile>();
 
         private static string defaultMime = "application/octet-stream";
         private static string mimesPath = @"Server\mimes.xml";
@@ -34,12 +30,11 @@ namespace WebShare.Server
 
         public event EventHandler<PermissionEventArgs> OnPermissionPrompt;
 
-        public HttpServer(string rootDirectory, int port)
-        {
-            RootDirectory = rootDirectory;
+        public HttpServer(int port)
+        {            
             Port = port;
 
-            loadSharedItems();
+            SharedFolders = settings.GetSHaredFolders();
 
             mimeTypes = loadMimeTypes();            
         }
@@ -56,11 +51,6 @@ namespace WebShare.Server
             listener.Stop();
         }
 
-        private void loadSharedItems()
-        {
-
-        }
-
         private Dictionary<string, string> loadMimeTypes()
         {
             Dictionary< string, string> mimes = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
@@ -69,7 +59,7 @@ namespace WebShare.Server
             {
                 string key = mime.Attribute("extension").Value;
                 string value = mime.Value;
-                mimeTypes.Add(key, value);
+                mimes.Add(key, value);
             }
             return mimes;
         }
@@ -124,10 +114,10 @@ namespace WebShare.Server
                 Debug.WriteLine("Serving content listing");
                 serveContentListing(context);
             }
-            else if (fileExistsInWebRoot(requestedFileName))
+            else if (fileIsShared(requestedFileName))
             {
                 Debug.WriteLine("Serving file");
-                serveFile(requestedFileName, context);
+                serveFile(getFullFilePath(requestedFileName), context);
             }
             else
             {
@@ -160,18 +150,17 @@ namespace WebShare.Server
             serveStream(new ContentLister(this).getContentStream(), context);            
         }
 
-        private void serveFile(string requestedFileName, HttpListenerContext context)
+        private void serveFile(string fullFilePath, HttpListenerContext context)
         {   
             try
-            {
-                string fullFilePath = Path.Combine(RootDirectory, requestedFileName);
+            {                
                 Stream input = new FileStream(fullFilePath, FileMode.Open);
                     
-                string fileExtension = Path.GetExtension(requestedFileName).Replace(".", "");
+                string fileExtension = Path.GetExtension(fullFilePath).Replace(".", "");
                 string mime;
                 context.Response.ContentType = mimeTypes.TryGetValue(fileExtension, out mime) ? mime : defaultMime;
                     
-                context.Response.AddHeader("Last-Modified", File.GetLastWriteTime(requestedFileName).ToString("r"));
+                context.Response.AddHeader("Last-Modified", File.GetLastWriteTime(fullFilePath).ToString("r"));
 
                 serveStream(input, context);
             }
@@ -205,9 +194,28 @@ namespace WebShare.Server
             context.Response.OutputStream.Flush();
         }
 
-        private bool fileExistsInWebRoot(string fileName)
+        private bool fileIsShared(string requestedFile)
         {
-            return File.Exists(Path.Combine(RootDirectory, fileName));
+            foreach (SharedFolder folder in SharedFolders)
+            {
+                if (folder.Containsfile(requestedFile))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private string getFullFilePath(string requestedFileName)
+        {
+            foreach (SharedFolder folder in SharedFolders)
+            {
+                if (folder.Containsfile(requestedFileName))
+                {
+                    return Path.Combine(folder.Path, requestedFileName);
+                }
+            }
+            return "";
         }
     }
 

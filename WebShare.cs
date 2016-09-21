@@ -16,7 +16,7 @@ namespace WebShare
             InitializeComponent();
 
             int port = 8080;
-            server = new HttpServer(@"C:\Users\jelle\Downloads", port);
+            server = new HttpServer(port);
             server.OnPermissionPrompt += OnpErmissionPrompt;
             server.Start();
             Debug.WriteLine("Starting HTTP server on port " + port);            

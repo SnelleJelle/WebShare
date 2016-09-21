@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Xml.Linq;
@@ -63,6 +64,22 @@ namespace WebShare.Server.Settings
                 }
             }
             return false;
+        }
+
+        public List<SharedFolder> GetSHaredFolders()
+        {
+            List<SharedFolder> sharedFolders = new List<SharedFolder>();
+            var xmlSharedFolders = settings.Element("settings").Element("sharedFolders");
+            foreach (var xmlSharedFolder in xmlSharedFolders.Elements())
+            {
+                SharedFolder sharedFolder = new SharedFolder {
+                    Path = xmlSharedFolder.Element("path").Value,
+                    Alias = xmlSharedFolder.Element("alias").Value
+                };
+                sharedFolders.Add(sharedFolder);
+            }
+
+            return sharedFolders;
         }
 
         public void Save()
