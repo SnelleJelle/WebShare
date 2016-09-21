@@ -90,6 +90,23 @@ namespace WebShare.Server.Settings
             return sharedFolders;
         }
 
+        public void AddSharedFolder(SharedFolder folder)
+        {
+            var xmlSharedFolders = settings.Element("settings").Element("sharedFolders");
+            xmlSharedFolders.Add(new XElement("sharedFolder",
+                new XElement("path", folder.Path),
+                new XElement("alias", folder.Alias)
+                ));
+        }
+
+        public void AddShardFolderRange(params SharedFolder[] sharedfolders)
+        {
+            foreach(SharedFolder folder in sharedfolders)
+            {
+                AddSharedFolder(folder);
+            }
+        }
+
         public void Save()
         {
             settings.Save(filePath);

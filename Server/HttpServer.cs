@@ -35,8 +35,7 @@ namespace WebShare.Server
             Port = port;
 
             SharedFolders = settings.GetSHaredFolders();
-
-            mimeTypes = loadMimeTypes();            
+            mimeTypes = loadMimeTypes(); 
         }
 
         public void Start()
@@ -216,6 +215,13 @@ namespace WebShare.Server
                 }
             }
             return "";
+        }
+
+        public void AddSharedFolders(params SharedFolder[] folders)
+        {
+            SharedFolders.AddRange(folders);
+            settings.AddShardFolderRange(folders);
+            settings.Save();
         }
     }
 
