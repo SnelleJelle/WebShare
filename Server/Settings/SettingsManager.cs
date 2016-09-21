@@ -19,12 +19,7 @@ namespace WebShare.Server.Settings
 
         public void AddClientToWhiteList(IPEndPoint client)
         {
-            string host = "";
-            try
-            {
-                host = Dns.GetHostEntry(client.Address).HostName;
-            }
-            catch (SocketException se) {}
+            
 
             XElement whiteClient = new XElement("client",
                 new XElement("ip", client.Address.ToString()),
@@ -110,6 +105,17 @@ namespace WebShare.Server.Settings
         public void Save()
         {
             settings.Save(filePath);
+        }
+
+        private void getHostname(IPEndPoint client)
+        {
+            string host = "";
+            try
+            {
+                host = Dns.GetHostEntry(client.Address).HostName;
+            }
+            catch (SocketException se) { }
+            return host;
         }
     }
 }
