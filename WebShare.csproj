@@ -76,6 +76,7 @@
     <Compile Include="Server\ContentListing\ContentFile.cs" />
     <Compile Include="Server\ContentListing\ContentLister.cs" />
     <Compile Include="Server\Error\ErrorMessage.cs" />
+    <Compile Include="Server\FireWall\FirewallManager.cs" />
     <Compile Include="Server\Settings\SettingsManager.cs" />
     <Compile Include="Server\SharedFolder.cs" />
     <Compile Include="Server\TemplateGenerator.cs" />
@@ -149,6 +150,18 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="NetFwTypeLib">
+      <Guid>{58FBCF7C-E7A9-467C-80B3-FC65E8FCCA08}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
