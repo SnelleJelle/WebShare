@@ -21,7 +21,7 @@ namespace WebShare.Server
         {
             Path = path;
             var split =  path.Split(new string[] { "\\" }, StringSplitOptions.None);
-            Alias = split[split.Length];
+            Alias = split[split.Length - 1];
         }
 
         public bool Containsfile(string fileName)
