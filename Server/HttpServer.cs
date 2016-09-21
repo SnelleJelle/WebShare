@@ -12,6 +12,8 @@ using WebShare.Server.ContentListing;
 using WebShare.Server.Error;
 using System.Windows.Forms;
 using WebShare.Server.Settings;
+using NetFwTypeLib;
+using WebShare.Server.FireWall;
 
 namespace WebShare.Server
 {
@@ -35,7 +37,9 @@ namespace WebShare.Server
             Port = port;
 
             SharedFolders = settings.GetSHaredFolders();
-            mimeTypes = loadMimeTypes(); 
+            mimeTypes = loadMimeTypes();
+
+            setFirewallRule();
         }
 
         public void Start()
@@ -222,6 +226,11 @@ namespace WebShare.Server
             SharedFolders.AddRange(folders);
             settings.AddShardFolderRange(folders);
             settings.Save();
+        }
+
+        private void setFirewallRule()
+        {
+            new FirewallManager(this).setFirewallRule();
         }
     }
 

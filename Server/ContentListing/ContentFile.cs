@@ -74,6 +74,5 @@ namespace WebShare.Server.ContentListing
             {"iso", "fa fa-dot-circle-o"}
             #endregion
         };
-
     }
 }
