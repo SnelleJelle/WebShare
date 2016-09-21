@@ -20,7 +20,7 @@ namespace WebShare.Server
             return stream;
         }
 
-        internal string renderRazor(object contents)
+        internal string renderTemplate(object contents)
         {
             string templateHtml = File.ReadAllText(templateFile);
             Template template = Template.Parse(templateHtml);           
