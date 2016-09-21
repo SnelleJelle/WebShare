@@ -18,12 +18,13 @@ namespace WebShare
 
             int port = 8080;
             server = new HttpServer(port);
-            server.OnPermissionPrompt += OnpErmissionPrompt;
+            server.OnPermissionPrompt += onPermissionPromp;
             server.Start();
-            Debug.WriteLine("Starting HTTP server on port " + port);            
+            Debug.WriteLine("Starting HTTP server on port " + port);
+            fillFolderList();
         }
 
-        void OnpErmissionPrompt(object sender, PermissionEventArgs e)
+        private void onPermissionPromp(object sender, PermissionEventArgs e)
         {
             string host = "no hostname found for this client";
             try
@@ -41,6 +42,20 @@ namespace WebShare
             {
                 server.BlockClient(e.Client);
             }
+        }
+
+        private void fillFolderList()
+        {
+            lstSharedFolders.DataSource = null;
+            lstSharedFolders.DataSource = server.SharedFolders;
+        }
+
+        private void btnAddFolder_Click(object sender, EventArgs e)
+        {
+            server.AddSharedFolders(new SharedFolder(txtNewFolder.Text));
+            fillFolderList();
+
+
         }
     }
 }
