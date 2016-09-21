@@ -36,5 +36,10 @@ namespace WebShare.Server
             }
             return false;
         }
+
+        public override string ToString()
+        {
+            return Path + " -> " + Alias;
+        }
     }
 }
