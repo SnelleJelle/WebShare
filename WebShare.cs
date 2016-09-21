@@ -1,28 +1,61 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net.Sockets;
 using System.Windows.Forms;
 using WebShare.Server;
+using WebShare.Server.Settings;
 
 namespace WebShare
 {
     public partial class WebShare : Form
     {
+        private HttpServer server;
+
         public WebShare()
         {
             InitializeComponent();
 
             int port = 8080;
-            HttpServer s = new HttpServer(@"C:\Users\jelle\Downloads", port);
-            s.Start();
+            server = new HttpServer(port);
+            server.OnPermissionPrompt += onPermissionPromp;
+            server.Start();
             Debug.WriteLine("Starting HTTP server on port " + port);
+            fillFolderList();
+        }
+
+        private void onPermissionPromp(object sender, PermissionEventArgs e)
+        {
+            string host = "no hostname found for this client";
+            try
+            {
+                host = Dns.GetHostEntry(e.Client.Address).HostName;
+            }
+            catch (SocketException se) {}
+            DialogResult incoming = MessageBox.Show("Allow client?\n" + e.Client.Address + "\n" + host,
+                "Incoming connection request", MessageBoxButtons.YesNo);
+            if (incoming == DialogResult.Yes)
+            {
+                server.AllowClient(e.Client);
+            }
+            else if (incoming == DialogResult.No)
+            {
+                server.BlockClient(e.Client);
+            }
+        }
+
+        private void fillFolderList()
+        {
+            lstSharedFolders.DataSource = null;
+            lstSharedFolders.DataSource = server.SharedFolders;
+        }
+
+        private void btnAddFolder_Click(object sender, EventArgs e)
+        {
+            server.AddSharedFolders(new SharedFolder(txtNewFolder.Text));
+            fillFolderList();
+
+
         }
     }
 }

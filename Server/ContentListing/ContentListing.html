@@ -3,38 +3,40 @@
 <head>    
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
+    <!--JQuery-->
+    <script src="http://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <!--Font awesome-->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
     <title>WebShare Content</title>
 </head>
 <body>
-    <div class="jumbotron">        
-        <h1><img src="http://i.imgur.com/cfViguG.png" width="100" height="100"/> WebShare content</h1>
-        <p>All shared items are listed below, click on a file to download it.</p>
+    <div class="jumbotron" style="padding: 15px;">
+        <div>
+            <img src="http://i.imgur.com/cfViguG.png" width="100" height="100" /> <h1>WebShare content</h1>
+            <p>All shared items are listed below, click on a file to download it.</p>
+        </div>
     </div>
-    <div class="row col-md-8">
-        <table class="table table-hover table-striped">
-            <thead>
-                <tr>
-                    <th>Content</th>
-                    <th>Size</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for content in model %}
-                    <tr><td><a href="{{ content.Name }}"><div>{{ content.Icon }} {{ content.Name }}</div></a></td> <td class="col-md-2">{{ content.Size }}</td></tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <div class="container">
+        {% for contentFolder in model %}  
+            <div class="list-group">
+                <a data-toggle="collapse" href="#{{ contentFolder.Name }}" class="list-group-item active">
+                    <h4 class="list-group-item-heading">{{ contentFolder.Name }}</h4>
+                    <p class="list-group-item-text"><span class="badge">{{ contentFolder.Contents | size}} files</span></p>
+                </a>
+                <div id="{{ contentFolder.Name }}" class="panel-collapse collapse">
+                    {% for contentFile in contentFolder.Contents %}
+                        <a href="{{ contentFile.Name }}" class="list-group-item">
+                            <h4 class="list-group-item-heading">{{ contentFile.Icon }} {{ contentFile.Name }}</h4>
+                            <p class="list-group-item-text">{{ contentFile.Size }}</p>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
     </div>
 </body>
 </html>

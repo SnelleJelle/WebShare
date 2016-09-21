@@ -10,35 +10,32 @@ using System.Diagnostics;
 using System.Xml.Linq;
 using WebShare.Server.ContentListing;
 using WebShare.Server.Error;
+using System.Windows.Forms;
+using WebShare.Server.Settings;
 
 namespace WebShare.Server
 {
     class HttpServer
     {
-        public string RootDirectory { get; private set; }
         public int Port { get; private set; }
-        public bool AllowSharingSubfolders { get; set; }
+        public List<SharedFolder> SharedFolders { get; set; } = new List<SharedFolder>();
 
         private static string defaultMime = "application/octet-stream";
         private static string mimesPath = @"Server\mimes.xml";
+
         private IDictionary<string, string> mimeTypes { get; set; }
         private HttpListener listener;
         private Thread serverThread;
+        private SettingsManager settings = new SettingsManager();
 
-        public HttpServer(string rootDirectory, int port)
-        {
-            RootDirectory = rootDirectory;
+        public event EventHandler<PermissionEventArgs> OnPermissionPrompt;
+
+        public HttpServer(int port)
+        {            
             Port = port;
 
-            mimeTypes = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
-
-            XDocument mimeXml = XDocument.Load(mimesPath);
-            foreach (var mime in mimeXml.Element("mimes").Elements())
-            {
-                string key = mime.Attribute("extension").Value;
-                string value = mime.Value;
-                mimeTypes.Add(key, value);
-            }
+            SharedFolders = settings.GetSHaredFolders();
+            mimeTypes = loadMimeTypes(); 
         }
 
         public void Start()
@@ -53,6 +50,19 @@ namespace WebShare.Server
             listener.Stop();
         }
 
+        private Dictionary<string, string> loadMimeTypes()
+        {
+            Dictionary< string, string> mimes = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+            XDocument mimeXml = XDocument.Load(mimesPath);
+            foreach (var mime in mimeXml.Element("mimes").Elements())
+            {
+                string key = mime.Attribute("extension").Value;
+                string value = mime.Value;
+                mimes.Add(key, value);
+            }
+            return mimes;
+        }
+
         private void listen()
         {
             listener = new HttpListener();
@@ -62,8 +72,34 @@ namespace WebShare.Server
             while (true)
             {
                 HttpListenerContext context = listener.GetContext();
-                handleRequest(context);
+                handleConnection(context);
             }
+        }
+
+        private void handleConnection(HttpListenerContext context)
+        {
+            IPEndPoint client = context.Request.RemoteEndPoint;
+            Debug.Write("Incoming connection from: " + client.Address.ToString());
+            if (settings.IsClientBlocked(client))
+            {
+                serveError(401, context);
+                Debug.WriteLine(" -> Blocked");
+                return;
+            }
+
+            if (!settings.IsClientWhiteListed(client))
+            {
+                promptPermissionFor(client);
+                if (settings.IsClientBlocked(client))
+                {
+                    serveError(401, context);
+                    Debug.WriteLine(" -> Blocked");
+                    return;
+                }
+            }
+            Debug.WriteLine(" -> Allowed");
+
+            handleRequest(context);
         }
 
         private void handleRequest(HttpListenerContext context)
@@ -71,41 +107,59 @@ namespace WebShare.Server
             string requestedFileName = context.Request.Url.LocalPath;
             Debug.Write("Requested: " + requestedFileName + " -> ");
             requestedFileName = requestedFileName.Substring(1);
-            
+
             if (string.IsNullOrEmpty(requestedFileName))
             {
                 Debug.WriteLine("Serving content listing");
                 serveContentListing(context);
             }
-            else if (fileExistsInWebRoot(requestedFileName))
+            else if (fileIsShared(requestedFileName))
             {
                 Debug.WriteLine("Serving file");
-                serveFile(requestedFileName, context);
+                serveFile(getFullFilePath(requestedFileName), context);
             }
             else
             {
                 Debug.WriteLine("Content not found");
                 serveError(404, context);
-            }        
-        }        
+            }
+        }
+
+        private void promptPermissionFor(IPEndPoint client)
+        {
+            OnPermissionPrompt(this, new PermissionEventArgs { Client = client});            
+        }
+
+        public void BlockClient(IPEndPoint client)
+        {
+            settings.AddClientToBlockedList(client);
+            settings.Save();
+            Debug.WriteLine(" blocked");
+        }
+
+        public void AllowClient(IPEndPoint client)
+        {
+            settings.AddClientToWhiteList(client);
+            settings.Save();
+            Debug.WriteLine(" whitelisted");
+        }
 
         private void serveContentListing(HttpListenerContext context)
         {
             serveStream(new ContentLister(this).getContentStream(), context);            
         }
 
-        private void serveFile(string requestedFileName, HttpListenerContext context)
+        private void serveFile(string fullFilePath, HttpListenerContext context)
         {   
             try
-            {
-                string fullFilePath = Path.Combine(RootDirectory, requestedFileName);
+            {                
                 Stream input = new FileStream(fullFilePath, FileMode.Open);
                     
-                string fileExtension = Path.GetExtension(requestedFileName).Replace(".", "");
+                string fileExtension = Path.GetExtension(fullFilePath).Replace(".", "");
                 string mime;
                 context.Response.ContentType = mimeTypes.TryGetValue(fileExtension, out mime) ? mime : defaultMime;
                     
-                context.Response.AddHeader("Last-Modified", File.GetLastWriteTime(requestedFileName).ToString("r"));
+                context.Response.AddHeader("Last-Modified", File.GetLastWriteTime(fullFilePath).ToString("r"));
 
                 serveStream(input, context);
             }
@@ -139,9 +193,40 @@ namespace WebShare.Server
             context.Response.OutputStream.Flush();
         }
 
-        private bool fileExistsInWebRoot(string fileName)
+        private bool fileIsShared(string requestedFile)
         {
-            return File.Exists(Path.Combine(RootDirectory, fileName));
+            foreach (SharedFolder folder in SharedFolders)
+            {
+                if (folder.Containsfile(requestedFile))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
+
+        private string getFullFilePath(string requestedFileName)
+        {
+            foreach (SharedFolder folder in SharedFolders)
+            {
+                if (folder.Containsfile(requestedFileName))
+                {
+                    return Path.Combine(folder.Path, requestedFileName);
+                }
+            }
+            return "";
+        }
+
+        public void AddSharedFolders(params SharedFolder[] folders)
+        {
+            SharedFolders.AddRange(folders);
+            settings.AddShardFolderRange(folders);
+            settings.Save();
+        }
+    }
+
+    public class PermissionEventArgs : EventArgs
+    {
+        public IPEndPoint Client { get; set; }
     }
 }

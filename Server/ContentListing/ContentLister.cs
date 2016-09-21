@@ -15,19 +15,21 @@ namespace WebShare.Server.ContentListing
         }
 
         private string getHtmlContentListing()
-        {            
-            DirectoryInfo dir = new DirectoryInfo(Server.RootDirectory);
-            List<ContentItem> contents = new List<ContentItem>();
+        {
+            List<ContentFolder> contentFolders = new List<ContentFolder>();
+            foreach (SharedFolder folder in Server.SharedFolders)
+            {
+                ContentFolder contentFolder = new ContentFolder(folder.Alias);
+                DirectoryInfo dir = new DirectoryInfo(folder.Path);
+                foreach(FileInfo file in dir.GetFiles())
+                {
+                    contentFolder.Contents.Add(new ContentFile(file));
+                    int n = contentFolders.Count;
 
-            foreach (DirectoryInfo subdir in dir.GetDirectories())
-            {
-                contents.Add(ContentItem.FromFolder(subdir));
+                }
+                contentFolders.Add(contentFolder);
             }
-            foreach (FileInfo file in dir.GetFiles())
-            {
-                contents.Add(ContentItem.FromFile(file));
-            }
-            return renderRazor(contents);
+            return renderTemplate(contentFolders);
         }       
 
         public Stream getContentStream()

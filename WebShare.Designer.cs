@@ -29,36 +29,71 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WebShare));
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.pbLogo = new System.Windows.Forms.PictureBox();
+            this.lstSharedFolders = new System.Windows.Forms.ListBox();
+            this.txtNewFolder = new System.Windows.Forms.TextBox();
+            this.btnAddFolder = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.pbLogo)).BeginInit();
             this.SuspendLayout();
             // 
-            // pictureBox1
+            // pbLogo
             // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(12, 12);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(281, 224);
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
+            this.pbLogo.Image = ((System.Drawing.Image)(resources.GetObject("pbLogo.Image")));
+            this.pbLogo.Location = new System.Drawing.Point(12, 12);
+            this.pbLogo.Name = "pbLogo";
+            this.pbLogo.Size = new System.Drawing.Size(206, 206);
+            this.pbLogo.TabIndex = 0;
+            this.pbLogo.TabStop = false;
+            // 
+            // lstSharedFolders
+            // 
+            this.lstSharedFolders.FormattingEnabled = true;
+            this.lstSharedFolders.Location = new System.Drawing.Point(224, 12);
+            this.lstSharedFolders.Name = "lstSharedFolders";
+            this.lstSharedFolders.Size = new System.Drawing.Size(541, 199);
+            this.lstSharedFolders.TabIndex = 1;
+            // 
+            // txtNewFolder
+            // 
+            this.txtNewFolder.Location = new System.Drawing.Point(12, 244);
+            this.txtNewFolder.Name = "txtNewFolder";
+            this.txtNewFolder.Size = new System.Drawing.Size(502, 20);
+            this.txtNewFolder.TabIndex = 2;
+            // 
+            // btnAddFolder
+            // 
+            this.btnAddFolder.Location = new System.Drawing.Point(520, 242);
+            this.btnAddFolder.Name = "btnAddFolder";
+            this.btnAddFolder.Size = new System.Drawing.Size(75, 23);
+            this.btnAddFolder.TabIndex = 3;
+            this.btnAddFolder.Text = "Add folder";
+            this.btnAddFolder.UseVisualStyleBackColor = true;
+            this.btnAddFolder.Click += new System.EventHandler(this.btnAddFolder_Click);
             // 
             // WebShare
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(631, 483);
-            this.Controls.Add(this.pictureBox1);
+            this.ClientSize = new System.Drawing.Size(777, 288);
+            this.Controls.Add(this.btnAddFolder);
+            this.Controls.Add(this.txtNewFolder);
+            this.Controls.Add(this.lstSharedFolders);
+            this.Controls.Add(this.pbLogo);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "WebShare";
             this.Text = "WebShare";
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbLogo)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox pbLogo;
+        private System.Windows.Forms.ListBox lstSharedFolders;
+        private System.Windows.Forms.TextBox txtNewFolder;
+        private System.Windows.Forms.Button btnAddFolder;
     }
 }
 

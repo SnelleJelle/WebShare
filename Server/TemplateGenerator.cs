@@ -8,7 +8,6 @@ namespace WebShare.Server
 {
     public abstract class TemplateGenerator
     {
-        internal static string templateDelimiter = "<!--body-->";
         internal string templateFile { get; set; }
 
         internal Stream generateStreamFromString(string s)
@@ -21,7 +20,7 @@ namespace WebShare.Server
             return stream;
         }
 
-        internal string renderRazor(object contents)
+        internal string renderTemplate(object contents)
         {
             string templateHtml = File.ReadAllText(templateFile);
             Template template = Template.Parse(templateHtml);           
