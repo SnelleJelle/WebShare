@@ -75,6 +75,7 @@
     <Compile Include="Server\ContentListing\ContentFolder.cs" />
     <Compile Include="Server\ContentListing\ContentFile.cs" />
     <Compile Include="Server\ContentListing\ContentLister.cs" />
+    <Compile Include="Server\DownloadRequest.cs" />
     <Compile Include="Server\Error\ErrorMessage.cs" />
     <Compile Include="Server\FireWall\FirewallManager.cs" />
     <Compile Include="Server\Settings\SettingsManager.cs" />
@@ -161,7 +162,9 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Server\Web\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
