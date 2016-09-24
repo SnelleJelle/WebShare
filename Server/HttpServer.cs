@@ -108,24 +108,33 @@ namespace WebShare.Server
 
         private void handleRequest(HttpListenerContext context)
         {
-            string requestedFileName = context.Request.Url.LocalPath;
-            Debug.Write("Requested: " + requestedFileName + " -> ");
-            requestedFileName = requestedFileName.Substring(1);
+            string requestedPath = context.Request.Url.LocalPath;
+            Debug.Write("Requested: " + requestedPath + " -> ");
+            requestedPath = requestedPath.Substring(1);
 
-            if (string.IsNullOrEmpty(requestedFileName))
+            if (string.IsNullOrEmpty(requestedPath))
             {
                 Debug.WriteLine("Serving content listing");
                 serveContentListing(context);
             }
-            else if (fileIsShared(requestedFileName))
-            {
-                Debug.WriteLine("Serving file");
-                serveFile(getFullFilePath(requestedFileName), context);
-            }
             else
             {
-                Debug.WriteLine("Content not found");
-                serveError(404, context);
+                DownloadRequest request = new DownloadRequest(requestedPath);
+
+                if (request.IsFileRequest() && fileIsShared(request))
+                {
+                    Debug.WriteLine("Serving file");
+                    serveFile(getFullFilePath(request), context);
+                }
+                else if (request.IsWebRequest())
+                {
+                    serveFile("/Web/" + request.FileName, context);
+                }
+                else
+                {
+                    Debug.WriteLine("Content not found");
+                    serveError(404, context);
+                }
             }
         }
 
@@ -197,11 +206,11 @@ namespace WebShare.Server
             context.Response.OutputStream.Flush();
         }
 
-        private bool fileIsShared(string requestedFile)
+        private bool fileIsShared(DownloadRequest request)
         {
             foreach (SharedFolder folder in SharedFolders)
             {
-                if (folder.Containsfile(requestedFile))
+                if (folder.Alias == request.FolderAlias && folder.Containsfile(request.FileName))
                 {
                     return true;
                 }
@@ -209,13 +218,13 @@ namespace WebShare.Server
             return false;
         }
 
-        private string getFullFilePath(string requestedFileName)
+        private string getFullFilePath(DownloadRequest request)
         {
             foreach (SharedFolder folder in SharedFolders)
             {
-                if (folder.Containsfile(requestedFileName))
+                if (folder.Alias == request.FolderAlias)
                 {
-                    return Path.Combine(folder.Path, requestedFileName);
+                    return Path.Combine(folder.Path, request.FileName);
                 }
             }
             return "";

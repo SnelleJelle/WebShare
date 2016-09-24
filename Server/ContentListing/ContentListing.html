@@ -29,7 +29,7 @@
                 </a>
                 <div id="{{ contentFolder.Name }}" class="panel-collapse collapse">
                     {% for contentFile in contentFolder.Contents %}
-                        <a href="{{ contentFile.Name }}" class="list-group-item">
+                        <a href="/download/{{ contentFolder.Name }}/{{ contentFile.Name }}" class="list-group-item">
                             <h4 class="list-group-item-heading">{{ contentFile.Icon }} {{ contentFile.Name }}</h4>
                             <p class="list-group-item-text">{{ contentFile.Size }}</p>
                         </a>

@@ -54,8 +54,8 @@
     <ApplicationIcon>Resources\WebShare.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DotLiquid, Version=2.0.30.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c, processorArchitecture=MSIL">
-      <HintPath>..\packages\DotLiquid.2.0.30\lib\NET45\DotLiquid.dll</HintPath>
+    <Reference Include="DotLiquid, Version=2.0.55.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c, processorArchitecture=MSIL">
+      <HintPath>packages\DotLiquid.2.0.55\lib\net451\DotLiquid.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -75,6 +75,7 @@
     <Compile Include="Server\ContentListing\ContentFolder.cs" />
     <Compile Include="Server\ContentListing\ContentFile.cs" />
     <Compile Include="Server\ContentListing\ContentLister.cs" />
+    <Compile Include="Server\DownloadRequest.cs" />
     <Compile Include="Server\Error\ErrorMessage.cs" />
     <Compile Include="Server\FireWall\FirewallManager.cs" />
     <Compile Include="Server\Settings\SettingsManager.cs" />
@@ -161,7 +162,9 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Server\Web\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
