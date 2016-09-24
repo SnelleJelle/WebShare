@@ -24,7 +24,6 @@ namespace WebShare.Server.ContentListing
                 foreach(FileInfo file in dir.GetFiles())
                 {
                     contentFolder.Contents.Add(new ContentFile(file));
-                    int n = contentFolders.Count;
 
                 }
                 contentFolders.Add(contentFolder);
