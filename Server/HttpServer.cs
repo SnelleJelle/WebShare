@@ -46,6 +46,8 @@ namespace WebShare.Server
         {
             serverThread = new Thread(listen);
             serverThread.Start();
+
+            Logger.Log("Server starting");
         }
 
         public void Stop()

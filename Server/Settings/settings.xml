@@ -9,6 +9,10 @@
       <path>C:\Users\jelle\Downloads\eva\Kot en schoolinfo Brugge</path>
       <alias>eva</alias>
     </sharedFolder>
+    <sharedFolder>
+      <path>D:\Jelle_shared</path>
+      <alias>shared</alias>
+    </sharedFolder>
   </sharedFolders>
    <whitelist>
       <client>

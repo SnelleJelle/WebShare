@@ -78,6 +78,9 @@
     <Compile Include="Server\DownloadRequest.cs" />
     <Compile Include="Server\Error\ErrorMessage.cs" />
     <Compile Include="Server\FireWall\FirewallManager.cs" />
+    <Compile Include="Server\Logging\FileLogger.cs" />
+    <Compile Include="Server\Logging\ILoggerTarget.cs" />
+    <Compile Include="Server\Logging\Logger.cs" />
     <Compile Include="Server\Settings\SettingsManager.cs" />
     <Compile Include="Server\SharedFolder.cs" />
     <Compile Include="Server\TemplateGenerator.cs" />
