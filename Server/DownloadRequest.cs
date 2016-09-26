@@ -8,6 +8,8 @@ namespace WebShare.Server
 {
     class DownloadRequest
     {
+        private string exception_favicon = "favicon.ico";
+
         public string Command { get; set; }
         public string FolderAlias { get; set; }
         public string FileName { get; set; }
@@ -22,6 +24,10 @@ namespace WebShare.Server
 
         public DownloadRequest(string request)
         {
+            if (request == exception_favicon)
+            {
+                return;
+            }
             string[] split= request.Split('/');
             if (split.Length == 2 && split[0].ToLower() == WebRequest)
             {
