@@ -46,8 +46,8 @@ namespace WebShare.Server
         {
             serverThread = new Thread(listen);
             serverThread.Start();
-
-            Logger.Log("Server starting");
+            Logger.Log("Server starting on port: " + Port);
+            Logger.Log("Browse locally on: http://localhost:" + Port + "/");
         }
 
         public void Stop()
@@ -85,11 +85,10 @@ namespace WebShare.Server
         private void handleConnection(HttpListenerContext context)
         {
             IPEndPoint client = context.Request.RemoteEndPoint;
-            Debug.Write("Incoming connection from: " + client.Address.ToString());
             if (settings.IsClientBlocked(client))
             {
                 serveError(401, context);
-                Debug.WriteLine(" -> Blocked");
+                Logger.Log("Incoming connection from: " + client.Address.ToString() + " -> Blocked");
                 return;
             }
 
@@ -99,11 +98,11 @@ namespace WebShare.Server
                 if (settings.IsClientBlocked(client))
                 {
                     serveError(401, context);
-                    Debug.WriteLine(" -> Blocked");
+                    Logger.Log("Incoming connection from: " + client.Address.ToString() + " -> Blocked");
                     return;
                 }
             }
-            Debug.WriteLine(" -> Allowed");
+            Logger.Log("Incoming connection from: " + client.Address.ToString() + " -> Allowed");
 
             handleRequest(context);
         }
@@ -111,12 +110,11 @@ namespace WebShare.Server
         private void handleRequest(HttpListenerContext context)
         {
             string requestedPath = context.Request.Url.LocalPath;
-            Debug.Write("Requested: " + requestedPath + " -> ");
             requestedPath = requestedPath.Substring(1);
 
             if (string.IsNullOrEmpty(requestedPath))
             {
-                Debug.WriteLine("Serving content listing");
+                Logger.Log("Requested: " + requestedPath + " -> Serving content listing");
                 serveContentListing(context);
             }
             else
@@ -125,7 +123,7 @@ namespace WebShare.Server
 
                 if (request.IsFileRequest() && fileIsShared(request))
                 {
-                    Debug.WriteLine("Serving file");
+                    Logger.Log("Requested: " + requestedPath + " -> Serving file");
                     serveFile(getFullFilePath(request), context);
                 }
                 else if (request.IsWebRequest())
@@ -134,7 +132,7 @@ namespace WebShare.Server
                 }
                 else
                 {
-                    Debug.WriteLine("Content not found");
+                    Logger.Log("Requested: " + requestedPath + " -> Content not found");
                     serveError(404, context);
                 }
             }
@@ -149,14 +147,14 @@ namespace WebShare.Server
         {
             settings.AddClientToBlockedList(client);
             settings.Save();
-            Debug.WriteLine(" blocked");
+            Logger.Log("Blocked: " + client.Address.ToString());
         }
 
         public void AllowClient(IPEndPoint client)
         {
             settings.AddClientToWhiteList(client);
             settings.Save();
-            Debug.WriteLine(" whitelisted");
+            Logger.Log("Whitelisted: " + client.Address.ToString());
         }
 
         private void serveContentListing(HttpListenerContext context)

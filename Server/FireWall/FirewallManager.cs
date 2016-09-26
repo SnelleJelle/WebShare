@@ -30,6 +30,7 @@ namespace WebShare.Server.FireWall
                 RuleName, exePath);
 
             runCmd(command);
+            Logger.Log("created firewall rule: " + RuleName);
         }
 
         private bool ruleAlreadyExists()
