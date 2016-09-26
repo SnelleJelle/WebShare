@@ -39,37 +39,32 @@
             // pbLogo
             // 
             this.pbLogo.Image = ((System.Drawing.Image)(resources.GetObject("pbLogo.Image")));
-            this.pbLogo.Location = new System.Drawing.Point(18, 18);
-            this.pbLogo.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pbLogo.Location = new System.Drawing.Point(12, 12);
             this.pbLogo.Name = "pbLogo";
-            this.pbLogo.Size = new System.Drawing.Size(309, 317);
+            this.pbLogo.Size = new System.Drawing.Size(206, 206);
             this.pbLogo.TabIndex = 0;
             this.pbLogo.TabStop = false;
             // 
             // lstSharedFolders
             // 
             this.lstSharedFolders.FormattingEnabled = true;
-            this.lstSharedFolders.ItemHeight = 20;
-            this.lstSharedFolders.Location = new System.Drawing.Point(336, 18);
-            this.lstSharedFolders.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.lstSharedFolders.Location = new System.Drawing.Point(224, 12);
             this.lstSharedFolders.Name = "lstSharedFolders";
-            this.lstSharedFolders.Size = new System.Drawing.Size(810, 304);
+            this.lstSharedFolders.Size = new System.Drawing.Size(541, 199);
             this.lstSharedFolders.TabIndex = 1;
             // 
             // txtNewFolder
             // 
-            this.txtNewFolder.Location = new System.Drawing.Point(18, 375);
-            this.txtNewFolder.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtNewFolder.Location = new System.Drawing.Point(12, 244);
             this.txtNewFolder.Name = "txtNewFolder";
-            this.txtNewFolder.Size = new System.Drawing.Size(751, 26);
+            this.txtNewFolder.Size = new System.Drawing.Size(502, 20);
             this.txtNewFolder.TabIndex = 2;
             // 
             // btnAddFolder
             // 
-            this.btnAddFolder.Location = new System.Drawing.Point(780, 372);
-            this.btnAddFolder.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btnAddFolder.Location = new System.Drawing.Point(520, 242);
             this.btnAddFolder.Name = "btnAddFolder";
-            this.btnAddFolder.Size = new System.Drawing.Size(112, 35);
+            this.btnAddFolder.Size = new System.Drawing.Size(75, 23);
             this.btnAddFolder.TabIndex = 3;
             this.btnAddFolder.Text = "Add folder";
             this.btnAddFolder.UseVisualStyleBackColor = true;
@@ -77,18 +72,16 @@
             // 
             // WebShare
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1166, 443);
+            this.ClientSize = new System.Drawing.Size(777, 288);
             this.Controls.Add(this.btnAddFolder);
             this.Controls.Add(this.txtNewFolder);
             this.Controls.Add(this.lstSharedFolders);
             this.Controls.Add(this.pbLogo);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "WebShare";
             this.Text = "WebShare";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.WebShare_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.pbLogo)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
