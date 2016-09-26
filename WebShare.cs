@@ -20,7 +20,6 @@ namespace WebShare
             server = new HttpServer(port);
             server.OnPermissionPrompt += onPermissionPromp;
             server.Start();
-            Debug.WriteLine("Starting HTTP server on port " + port);
             fillFolderList();
         }
 
@@ -54,8 +53,6 @@ namespace WebShare
         {
             server.AddSharedFolders(new SharedFolder(txtNewFolder.Text));
             fillFolderList();
-
-
         }
     }
 }
