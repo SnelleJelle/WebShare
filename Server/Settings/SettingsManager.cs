@@ -26,7 +26,7 @@ namespace WebShare.Server.Settings
                 new XElement("name", getHostname(client))
             );
 
-            var whiteList = settings.Element("settings").Element("whitelist");
+            var whiteList = settings.Element("settings").Element("clients").Element("whitelist");
             whiteList.Add(whiteClient);
         }
 
@@ -37,13 +37,13 @@ namespace WebShare.Server.Settings
                 new XElement("name", getHostname(client))
             );
 
-            var blockedlist = settings.Element("settings").Element("blockedlist");
-            blockedlist.Add(blockedClient);
+            var blacklist = settings.Element("settings").Element("blacklist");
+            blacklist.Add(blockedClient);
         }
 
         public bool IsClientWhiteListed(IPEndPoint client)
         {
-            var whitelist = settings.Element("settings").Element("whitelist");
+            var whitelist = settings.Element("settings").Element("clients").Element("whitelist");
             foreach (var whitelisted in whitelist.Elements())
             {
                 if (whitelisted.Element("ip").Value == client.Address.ToString() && 
@@ -57,8 +57,8 @@ namespace WebShare.Server.Settings
 
         public bool IsClientBlocked(IPEndPoint client)
         {
-            var blockedlist = settings.Element("settings").Element("blockedlist");
-            foreach (var blockedClient in blockedlist.Elements())
+            var blacklist = settings.Element("settings").Element("clients").Element("blacklist");
+            foreach (var blockedClient in blacklist.Elements())
             {
                 if (blockedClient.Element("ip").Value == client.Address.ToString() &&
                     blockedClient.Element("name").Value == getHostname(client))
@@ -83,6 +83,32 @@ namespace WebShare.Server.Settings
             }
 
             return sharedFolders;
+        }
+
+        public List<Client> GetClients()
+        {
+            List<Client> Clients = new List<Client>();
+            var xmlClients = settings.Element("settings").Element("whitelist");
+            foreach(var xmlClientList in xmlClients.Elements())
+            {
+                Client client = new Client
+                {
+                    IP = new IPEndPoint(IPAddress.Parse(xmlClientList.Element("ip").Value), 0),
+                            Allowed = true
+                        };
+                        Clients.Add(client);              
+            }
+            xmlClients = settings.Element("settings").Element("blacklist");
+            foreach (var xmlClientList in xmlClients.Elements())
+            {
+                Client client = new Client
+                {
+                    IP = new IPEndPoint(IPAddress.Parse(xmlClientList.Element("ip").Value), 0),
+                    Allowed = false
+                };
+                Clients.Add(client);
+            }
+            return Clients;
         }
 
         public void AddSharedFolder(SharedFolder folder)

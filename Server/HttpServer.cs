@@ -21,6 +21,7 @@ namespace WebShare.Server
     {
         public int Port { get; private set; }
         public List<SharedFolder> SharedFolders { get; set; } = new List<SharedFolder>();
+        public List<Client> Clients { get; set; } = new List<Client>();
 
         private static string defaultMime = "application/octet-stream";
         private static string mimesPath = @"Server\mimes.xml";
@@ -37,6 +38,7 @@ namespace WebShare.Server
             Port = port;
 
             SharedFolders = settings.GetSHaredFolders();
+            Clients = settings.GetClients();
             mimeTypes = loadMimeTypes();
 
             setFirewallRule();

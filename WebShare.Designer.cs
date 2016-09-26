@@ -37,8 +37,8 @@
             this.tcWebShare = new System.Windows.Forms.TabControl();
             this.tpSharedFolders = new System.Windows.Forms.TabPage();
             this.tcClients = new System.Windows.Forms.TabPage();
-            this.lbWhitelistedClients = new System.Windows.Forms.ListBox();
-            this.lbBlacklistedClients = new System.Windows.Forms.ListBox();
+            this.lstWhitelistedClients = new System.Windows.Forms.ListBox();
+            this.lstBlacklistedClients = new System.Windows.Forms.ListBox();
             this.lblWhitelistedClients = new System.Windows.Forms.Label();
             this.lblBlacklistedClients = new System.Windows.Forms.Label();
             this.btnBlacklistClient = new System.Windows.Forms.Button();
@@ -135,23 +135,23 @@
             this.tcClients.Text = "Clients";
             this.tcClients.UseVisualStyleBackColor = true;
             // 
-            // lbWhitelistedClients
+            // lstWhitelistedClients
             // 
-            this.lbWhitelistedClients.FormattingEnabled = true;
-            this.lbWhitelistedClients.ItemHeight = 20;
-            this.lbWhitelistedClients.Location = new System.Drawing.Point(21, 54);
-            this.lbWhitelistedClients.Name = "lbWhitelistedClients";
-            this.lbWhitelistedClients.Size = new System.Drawing.Size(191, 244);
-            this.lbWhitelistedClients.TabIndex = 0;
+            this.lstWhitelistedClients.FormattingEnabled = true;
+            this.lstWhitelistedClients.ItemHeight = 20;
+            this.lstWhitelistedClients.Location = new System.Drawing.Point(21, 54);
+            this.lstWhitelistedClients.Name = "lstWhitelistedClients";
+            this.lstWhitelistedClients.Size = new System.Drawing.Size(191, 244);
+            this.lstWhitelistedClients.TabIndex = 0;
             // 
-            // lbBlacklistedClients
+            // lstBlacklistedClients
             // 
-            this.lbBlacklistedClients.FormattingEnabled = true;
-            this.lbBlacklistedClients.ItemHeight = 20;
-            this.lbBlacklistedClients.Location = new System.Drawing.Point(267, 54);
-            this.lbBlacklistedClients.Name = "lbBlacklistedClients";
-            this.lbBlacklistedClients.Size = new System.Drawing.Size(191, 244);
-            this.lbBlacklistedClients.TabIndex = 1;
+            this.lstBlacklistedClients.FormattingEnabled = true;
+            this.lstBlacklistedClients.ItemHeight = 20;
+            this.lstBlacklistedClients.Location = new System.Drawing.Point(267, 54);
+            this.lstBlacklistedClients.Name = "lstBlacklistedClients";
+            this.lstBlacklistedClients.Size = new System.Drawing.Size(191, 244);
+            this.lstBlacklistedClients.TabIndex = 1;
             // 
             // lblWhitelistedClients
             // 
@@ -193,9 +193,9 @@
             // 
             this.gbClients.Controls.Add(this.lblWhitelistedClients);
             this.gbClients.Controls.Add(this.btnWhitelistclient);
-            this.gbClients.Controls.Add(this.lbWhitelistedClients);
+            this.gbClients.Controls.Add(this.lstWhitelistedClients);
             this.gbClients.Controls.Add(this.btnBlacklistClient);
-            this.gbClients.Controls.Add(this.lbBlacklistedClients);
+            this.gbClients.Controls.Add(this.lstBlacklistedClients);
             this.gbClients.Controls.Add(this.lblBlacklistedClients);
             this.gbClients.Location = new System.Drawing.Point(6, 6);
             this.gbClients.Name = "gbClients";
@@ -239,9 +239,9 @@
         private System.Windows.Forms.GroupBox gbClients;
         private System.Windows.Forms.Label lblWhitelistedClients;
         private System.Windows.Forms.Button btnWhitelistclient;
-        private System.Windows.Forms.ListBox lbWhitelistedClients;
+        private System.Windows.Forms.ListBox lstWhitelistedClients;
         private System.Windows.Forms.Button btnBlacklistClient;
-        private System.Windows.Forms.ListBox lbBlacklistedClients;
+        private System.Windows.Forms.ListBox lstBlacklistedClients;
         private System.Windows.Forms.Label lblBlacklistedClients;
     }
 }

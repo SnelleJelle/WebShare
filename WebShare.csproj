@@ -72,6 +72,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Server\Client.cs" />
     <Compile Include="Server\ContentListing\ContentFolder.cs" />
     <Compile Include="Server\ContentListing\ContentFile.cs" />
     <Compile Include="Server\ContentListing\ContentLister.cs" />

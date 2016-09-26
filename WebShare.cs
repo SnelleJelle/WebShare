@@ -21,7 +21,7 @@ namespace WebShare
             server.OnPermissionPrompt += onPermissionPromp;
             server.Start();
             Debug.WriteLine("Starting HTTP server on port " + port);
-            fillFolderList();
+            fillLists();
         }
 
         private void onPermissionPromp(object sender, PermissionEventArgs e)
@@ -44,16 +44,20 @@ namespace WebShare
             }
         }
 
-        private void fillFolderList()
+        private void fillLists()
         {
             lstSharedFolders.DataSource = null;
+            lstBlacklistedClients.DataSource = null;
+            lstWhitelistedClients.DataSource = null;
             lstSharedFolders.DataSource = server.SharedFolders;
+            lstBlacklistedClients.DataSource = server.Clients.FindAll(Client => Client.Allowed == false);
+            lstWhitelistedClients.DataSource = server.Clients.FindAll(Client => Client.Allowed == true);
         }
 
         private void btnAddFolder_Click(object sender, EventArgs e)
         {
             server.AddSharedFolders(new SharedFolder(txtNewFolder.Text));
-            fillFolderList();
+            fillLists();
 
 
         }
