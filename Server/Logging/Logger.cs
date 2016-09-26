@@ -9,6 +9,14 @@ namespace WebShare.Server
 {
     class Logger
     {
+        static Logger()
+        {
+            #if DEBUG
+                Targets.Add(new frmLoggingConsole());
+            #endif
+            Targets.Add(new FileLogger());
+        }
+
         public static List<ILoggerTarget> Targets { get; set; } = new List<ILoggerTarget>();
 
         internal static void Log(string message)
