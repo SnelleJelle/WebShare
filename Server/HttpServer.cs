@@ -14,6 +14,7 @@ using System.Windows.Forms;
 using WebShare.Server.Settings;
 using NetFwTypeLib;
 using WebShare.Server.FireWall;
+using System.IO.Compression;
 
 namespace WebShare.Server
 {
@@ -24,6 +25,7 @@ namespace WebShare.Server
 
         private static string defaultMime = "application/octet-stream";
         private static string mimesPath = @"Server\mimes.xml";
+        private static string zipCachePath = @"Cache\zip";
 
         private IDictionary<string, string> mimeTypes { get; set; }
         private HttpListener listener;
@@ -40,6 +42,7 @@ namespace WebShare.Server
             mimeTypes = loadMimeTypes();
 
             setFirewallRule();
+            createZipCache();
         }
 
         public void Start()
@@ -124,11 +127,16 @@ namespace WebShare.Server
                 if (request.IsFileRequest() && fileIsShared(request))
                 {
                     Logger.Log("Requested: " + requestedPath + " -> Serving file");
-                    serveFile(getFullFilePath(request), context);
+                    serveFile(getFullFilePathFrom(request), context);
                 }
                 else if (request.IsWebRequest())
                 {
                     serveFile("/Web/" + request.FileName, context);
+                }
+                else if (request.IsZipRequest())
+                {
+                    string fullDirPath = getFullFilePathFrom(request);
+                    serveFile(Zip(fullDirPath), context);
                 }
                 else
                 {
@@ -137,6 +145,20 @@ namespace WebShare.Server
                 }
             }
         }
+
+        public string Zip(string directoryPath)
+        {
+            string zipCacheFilePath = Path.Combine(zipCachePath, DateTime.Now + ".zip");
+            Logger.Log("Zipping directory" + directoryPath + " -> to file: " + zipCacheFilePath);
+            ZipFile.CreateFromDirectory(directoryPath, zipCacheFilePath, CompressionLevel.Optimal, true);
+            return zipCacheFilePath;
+        }
+
+        private void createZipCache()
+        {
+            Directory.CreateDirectory(zipCachePath);
+        }
+
 
         private void promptPermissionFor(IPEndPoint client)
         {
@@ -218,7 +240,7 @@ namespace WebShare.Server
             return false;
         }
 
-        private string getFullFilePath(DownloadRequest request)
+        private string getFullFilePathFrom(DownloadRequest request)
         {
             foreach (SharedFolder folder in SharedFolders)
             {
