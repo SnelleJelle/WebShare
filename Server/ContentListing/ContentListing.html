@@ -11,6 +11,33 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <!--Font awesome-->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+    <!--bootstrap toggle button-->
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet"> <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    <script type="text/javascript">
+
+        var day = true;
+        var cssid = "nightcss";
+
+        function cycleDayNight()
+        {
+            if (day) {
+                var link = document.createElement("link");
+                link.href = "https://bootswatch.com/slate/bootstrap.min.css";
+                link.type = "text/css";
+                link.rel = "stylesheet";
+                link.media = "screen,print";
+                link.id = cssid
+                document.getElementsByTagName("head")[0].appendChild(link);
+            }
+            else {
+                var element = document.getElementById(cssid);
+                element.outerHTML = "";
+                delete element;
+            }
+            day = !day;            
+        }
+
+    </script>
     <title>WebShare Content</title>
 </head>
 <body>
@@ -18,6 +45,11 @@
         <div>
             <img src="http://i.imgur.com/cfViguG.png" width="100" height="100" /> <h1>WebShare content</h1>
             <p>All shared items are listed below, click on a file to download it.</p>
+            <div class="pull-right">
+                <form action="#">
+                    <input type="checkbox" class="pull-right" data-toggle="toggle" data-on="Night" data-off="Day" name="colorScheme" onchange="cycleDayNight()">
+                </form>
+            </div>
         </div>
     </div>
     <div class="container">
