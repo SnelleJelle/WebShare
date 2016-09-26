@@ -2,18 +2,18 @@
 <settings>  
   <sharedFolders>
     <sharedFolder>
-      <path>C:\Users\jelle\Downloads</path>
+      <path>X:\Downloads</path>
       <alias>Downloads</alias>
     </sharedFolder>
     <sharedFolder>
-      <path>C:\Users\jelle\Downloads\eva\Kot en schoolinfo Brugge</path>
-      <alias>eva</alias>
+      <path>C:\Users\Tommy\Documents</path>
+      <alias>Documents</alias>
     </sharedFolder>
   </sharedFolders>
    <whitelist>
       <client>
          <ip>::1</ip>
-         <name>bto-jelly</name>
+         <name>tommy</name>
       </client>
    </whitelist>
   <blockedlist>

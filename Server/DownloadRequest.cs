@@ -36,7 +36,16 @@ namespace WebShare.Server
             }
             else
             {
-                throw new ArgumentException("the request doesn't fit the expected format: /download/{folderName}/{fileName} or /web/{favicon.ico | style.css | script.js}");
+                try
+                {
+                    throw new ArgumentException("the request doesn't fit the expected format: /download/{folderName}/{fileName} or /web/{favicon.ico | style.css | script.js}");
+
+                }
+                catch (Exception)
+                {
+
+                 
+                }
             }
         }
 
