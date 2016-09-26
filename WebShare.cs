@@ -57,5 +57,10 @@ namespace WebShare
 
 
         }
+
+        private void WebShare_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Environment.Exit(0);
+        }
     }
 }
