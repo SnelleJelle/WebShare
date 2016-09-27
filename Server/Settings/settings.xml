@@ -9,11 +9,13 @@
    <whitelist>
       <client>
          <ip>::1</ip>
+        <hostname>DESKTOP-6UOA98J</hostname>
       </client>
    </whitelist>
   <blacklist>
     <client>
       <ip>192.168.0.2</ip>
+      <hostname>oepsikbeneenleugen</hostname>
     </client>
   </blacklist>
 </settings>

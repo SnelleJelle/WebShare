@@ -84,18 +84,27 @@ namespace WebShare.Server
 
         private void handleConnection(HttpListenerContext context)
         {
-            Client client = Client.FromEndpoint(context.Request.RemoteEndPoint.ToString());
+            string hostName = Dns.GetHostEntry(context.Request.RemoteEndPoint.ToString()).HostName;
+            Client client = Client.FromEndpoint(context.Request.RemoteEndPoint.ToString(), hostName);
+            bool knownClient = Clients.Any(clientc => clientc.Hostname == client.Hostname);
+            //Add check on IP when hostnames and ip's are correct in the settings.
             Debug.Write("Incoming connection from: " + client.ToString());
-            if (settings.IsClientBlocked(client))
+            if (knownClient)
             {
-                serveError(401, context);
-                Debug.WriteLine(" -> Blocked");
-                return;
+                if (settings.IsClientBlocked(client))
+                {
+                    serveError(401, context);
+                    Debug.WriteLine(" -> Blocked");
+                    return;
+                }
             }
-
-            if (!settings.IsClientWhiteListed(client))
+            else
             {
                 promptPermissionFor(client);
+                //If we cancel the connection the client is blocked. 
+                //This class does not know the answer of the prompt,
+                //therefore it must check again if it has to block
+                //the client or not.
                 if (settings.IsClientBlocked(client))
                 {
                     serveError(401, context);
@@ -140,19 +149,19 @@ namespace WebShare.Server
             }
         }
 
-        private void promptPermissionFor(IPEndPoint client)
+        private void promptPermissionFor(Client client)
         {
             OnPermissionPrompt(this, new PermissionEventArgs { Client = client});            
         }
 
-        public void BlockClient(IPEndPoint client)
+        public void BlockClient(Client client)
         {
             settings.AddClientToBlockedList(client);
             settings.Save();
             Debug.WriteLine(" blocked");
         }
 
-        public void AllowClient(IPEndPoint client)
+        public void AllowClient(Client client)
         {
             settings.AddClientToWhiteList(client);
             settings.Save();

@@ -17,28 +17,23 @@ namespace WebShare.Server.Settings
             settings = XDocument.Load(filePath);
         }
 
-        public void AddClientToWhiteList(IPEndPoint client)
+        public void AddClientToWhiteList(Client client)
         {
-            
-
-            XElement whiteClient = new XElement("client",
-                new XElement("ip", client.Address.ToString()),
-                new XElement("name", getHostname(client))
+            var xmlAllowedClients = settings.Element("settings").Element("whitelist");
+            xmlAllowedClients.Add(new XElement("client",
+                new XElement("ip", client.IP),
+                new XElement("name", client.Hostname))
             );
 
-            var whiteList = settings.Element("settings").Element("clients").Element("whitelist");
-            whiteList.Add(whiteClient);
         }
 
-        public void AddClientToBlockedList(IPEndPoint client)
+        public void AddClientToBlockedList(Client client)
         {
-            XElement blockedClient = new XElement("client",
-                new XElement("ip", client.Address.ToString()),
-                new XElement("name", getHostname(client))
+            var xmlBlockedClients = settings.Element("settings").Element("blacklist");
+            xmlBlockedClients.Add(new XElement("client",
+                new XElement("ip", client.IP),
+                new XElement("name", client.Hostname))
             );
-
-            var blacklist = settings.Element("settings").Element("blacklist");
-            blacklist.Add(blockedClient);
         }
         //Refactor to one function
         public bool IsClientWhiteListed(Client client)
@@ -76,7 +71,9 @@ namespace WebShare.Server.Settings
                 Client client = new Client
                 {
                     IP = xmlClientList.Element("ip").Value,
-                            Allowed = true
+                            Allowed = true,
+                            Hostname = xmlClientList.Element("hostname").Value
+                            
                         };
                         Clients.Add(client);              
             }
@@ -86,7 +83,8 @@ namespace WebShare.Server.Settings
                 Client client = new Client
                 {
                     IP = xmlClientList.Element("ip").Value,
-                    Allowed = false
+                    Allowed = false,
+                    Hostname = xmlClientList.Element("hostname").Value
                 };
                 Clients.Add(client);
             }
@@ -114,7 +112,7 @@ namespace WebShare.Server.Settings
         {
             settings.Save(filePath);
         }
-
+        //move to Client
         private string getHostname(IPEndPoint client)
         {
             string host = "";

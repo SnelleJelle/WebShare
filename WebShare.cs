@@ -29,11 +29,10 @@ namespace WebShare
             string host = "no hostname found for this client";
             try
             {
-                
-                host = Dns.GetHostEntry(e.Client.Address).HostName;
+                host = e.Client.Hostname;
             }
             catch (SocketException se) {}
-            DialogResult incoming = MessageBox.Show("Allow client?\n" + e.Client.Address + "\n" + host,
+            DialogResult incoming = MessageBox.Show("Allow client?\n" + e.Client.IP + "\n" + host,
                 "Incoming connection request", MessageBoxButtons.YesNo);
             if (incoming == DialogResult.Yes)
             {

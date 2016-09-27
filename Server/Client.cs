@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace WebShare.Server
 {
-    class Client
+    public class Client
     {
         public string IP { get; set; }
         public bool Allowed { get; set; }
+        public string Hostname { get; set; }
 
         public Client()
         {
@@ -20,13 +21,15 @@ namespace WebShare.Server
         {
             IP = ip;
         }
-
-        public static Client FromEndpoint(string ip)
+        //fishy, public constructor in public class? Double usage?
+        public static Client FromEndpoint(string ip, string hostname)
         {
 
             return new Client
             {
-                IP = ip
+                IP = ip,
+                Hostname = hostname,
+                Allowed = false
             };
         }
 
