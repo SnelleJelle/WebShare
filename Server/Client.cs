@@ -27,6 +27,7 @@ namespace WebShare.Server
             return new Client
             {
                 IP = ip
+            };
         }
 
         public override string ToString()

@@ -247,6 +247,6 @@ namespace WebShare.Server
 
     public class PermissionEventArgs : EventArgs
     {
-        public IPEndPoint Client { get; set; }
+        public Client Client { get; set; }
     }
 }
