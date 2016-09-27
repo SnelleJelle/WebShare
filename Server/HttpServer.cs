@@ -37,7 +37,7 @@ namespace WebShare.Server
         {            
             Port = port;
 
-            SharedFolders = settings.GetSHaredFolders();
+            SharedFolders = settings.GetSharedFolders();
             Clients = settings.GetClients();
             mimeTypes = loadMimeTypes();
 

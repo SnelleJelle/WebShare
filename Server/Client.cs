@@ -9,21 +9,21 @@ namespace WebShare.Server
 {
     class Client
     {
-        public IPEndPoint IP { get; set; }
+        public string IP { get; set; }
         public bool Allowed { get; set; }
 
         public Client()
         {
 
         }
-        public Client(IPEndPoint ip)
+        public Client(string ip)
         {
             IP = ip;
         }
 
         public override string ToString()
         {
-            return IP.ToString();
+            return IP;
         }
     }
 

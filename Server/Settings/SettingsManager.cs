@@ -69,7 +69,7 @@ namespace WebShare.Server.Settings
             return false;
         }
 
-        public List<SharedFolder> GetSHaredFolders()
+        public List<SharedFolder> GetSharedFolders()
         {
             List<SharedFolder> sharedFolders = new List<SharedFolder>();
             var xmlSharedFolders = settings.Element("settings").Element("sharedFolders");
@@ -93,7 +93,7 @@ namespace WebShare.Server.Settings
             {
                 Client client = new Client
                 {
-                    IP = new IPEndPoint(IPAddress.Parse(xmlClientList.Element("ip").Value), 0),
+                    IP = xmlClientList.Element("ip").Value,
                             Allowed = true
                         };
                         Clients.Add(client);              
@@ -103,7 +103,7 @@ namespace WebShare.Server.Settings
             {
                 Client client = new Client
                 {
-                    IP = new IPEndPoint(IPAddress.Parse(xmlClientList.Element("ip").Value), 0),
+                    IP = xmlClientList.Element("ip").Value,
                     Allowed = false
                 };
                 Clients.Add(client);
