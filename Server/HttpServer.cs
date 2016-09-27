@@ -130,10 +130,12 @@ namespace WebShare.Server
                 }
                 else if (request.IsWebRequest())
                 {
+                    Logger.Log("Requested: " + requestedPath + " -> Serving web file");
                     serveFile("/Web/" + request.FileName, context);
                 }
                 else if (request.IsZipRequest())
                 {
+                    Logger.Log("Requested: " + requestedPath + " -> Serving zip");
                     string fullDirPath = request.FullPath;
                     serveFile(Zip(fullDirPath), context);
                 }
