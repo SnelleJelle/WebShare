@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ namespace WebShare.Server
         public string Command { get; set; }
         public string FolderAlias { get; set; }
         public string FileName { get; set; }
+        public string FullPath { get; private set; } = "";
 
         public static string WebRequest = "web";
         public static string FileRequest = "download";
@@ -32,8 +34,9 @@ namespace WebShare.Server
             }
             else if (split.Length == 2 && split[0].ToLower() == ZipRequest)
             {
-                Command = ZipRequest;
+                Command = ZipRequest;            
                 FileName = split[1];
+                FolderAlias = FileName;
             }
             else if (split.Length == 3 && split[0].ToLower() == FileRequest)
             {
@@ -60,6 +63,29 @@ namespace WebShare.Server
         public bool IsZipRequest()
         {
             return Command == ZipRequest;
+        }
+
+        public DownloadRequest WithSharedFolders(List<SharedFolder> sharedFolders)
+        {
+            foreach (SharedFolder folder in sharedFolders)
+            {
+                if (folder.Alias == this.FolderAlias)
+                {
+                    if (Command == WebRequest)
+                    {
+                        FullPath = Path.Combine(WebRequest, FileName);
+                    }
+                    if (Command == ZipRequest)
+                    {
+                        FullPath = folder.Path;
+                    }
+                    if (Command == FileRequest)
+                    {
+                        FullPath = Path.Combine(folder.Path, this.FileName);
+                    }
+                }
+            }
+            return this;
         }
     }
 }

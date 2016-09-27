@@ -42,7 +42,6 @@ namespace WebShare.Server
             mimeTypes = loadMimeTypes();
 
             setFirewallRule();
-            createZipCache();
         }
 
         public void Start()
@@ -122,12 +121,12 @@ namespace WebShare.Server
             }
             else
             {
-                DownloadRequest request = new DownloadRequest(requestedPath);
+                DownloadRequest request = new DownloadRequest(requestedPath).WithSharedFolders(SharedFolders);
 
                 if (request.IsFileRequest() && fileIsShared(request))
                 {
                     Logger.Log("Requested: " + requestedPath + " -> Serving file");
-                    serveFile(getFullFilePathFrom(request), context);
+                    serveFile(request.FullPath, context);
                 }
                 else if (request.IsWebRequest())
                 {
@@ -135,7 +134,7 @@ namespace WebShare.Server
                 }
                 else if (request.IsZipRequest())
                 {
-                    string fullDirPath = getFullFilePathFrom(request);
+                    string fullDirPath = request.FullPath;
                     serveFile(Zip(fullDirPath), context);
                 }
                 else
@@ -148,17 +147,13 @@ namespace WebShare.Server
 
         public string Zip(string directoryPath)
         {
-            string zipCacheFilePath = Path.Combine(zipCachePath, DateTime.Now + ".zip");
+            string zipFileName = directoryPath.Split('\\').Last();
+            zipFileName += DateTime.Now.ToString("_MM_dd_yy_HH_mm_ss") + ".zip";
+            string zipCacheFilePath = Path.Combine(zipCachePath, zipFileName);
             Logger.Log("Zipping directory" + directoryPath + " -> to file: " + zipCacheFilePath);
             ZipFile.CreateFromDirectory(directoryPath, zipCacheFilePath, CompressionLevel.Optimal, true);
             return zipCacheFilePath;
         }
-
-        private void createZipCache()
-        {
-            Directory.CreateDirectory(zipCachePath);
-        }
-
 
         private void promptPermissionFor(IPEndPoint client)
         {
@@ -238,18 +233,6 @@ namespace WebShare.Server
                 }
             }
             return false;
-        }
-
-        private string getFullFilePathFrom(DownloadRequest request)
-        {
-            foreach (SharedFolder folder in SharedFolders)
-            {
-                if (folder.Alias == request.FolderAlias)
-                {
-                    return Path.Combine(folder.Path, request.FileName);
-                }
-            }
-            return "";
         }
 
         public void AddSharedFolders(params SharedFolder[] folders)
