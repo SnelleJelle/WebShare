@@ -95,8 +95,8 @@ namespace WebShare.Server
                 {
                     serveError(401, context);
                     Debug.WriteLine(" -> Blocked");
-                    return;
                 }
+                return;
             }
             else
             {

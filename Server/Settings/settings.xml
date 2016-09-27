@@ -7,10 +7,11 @@
     </sharedFolder>
   </sharedFolders>
    <whitelist>
-      <client>
+     <!--      <client>
          <ip>::1</ip>
         <hostname>DESKTOP-6UOA98J</hostname>
-      </client>
+      </client>-->
+
    </whitelist>
   <blacklist>
     <client>
