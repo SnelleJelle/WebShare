@@ -84,8 +84,8 @@ namespace WebShare.Server
 
         private void handleConnection(HttpListenerContext context)
         {
-            IPEndPoint client = context.Request.RemoteEndPoint;
-            Debug.Write("Incoming connection from: " + client.Address.ToString());
+            Client client = Client.FromEndpoint(context.Request.RemoteEndPoint.ToString());
+            Debug.Write("Incoming connection from: " + client.ToString());
             if (settings.IsClientBlocked(client))
             {
                 serveError(401, context);

@@ -40,33 +40,15 @@ namespace WebShare.Server.Settings
             var blacklist = settings.Element("settings").Element("blacklist");
             blacklist.Add(blockedClient);
         }
-
-        public bool IsClientWhiteListed(IPEndPoint client)
+        //Refactor to one function
+        public bool IsClientWhiteListed(Client client)
         {
-            var whitelist = settings.Element("settings").Element("clients").Element("whitelist");
-            foreach (var whitelisted in whitelist.Elements())
-            {
-                if (whitelisted.Element("ip").Value == client.Address.ToString() && 
-                    whitelisted.Element("name").Value == getHostname(client))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return client.Allowed;
         }
 
-        public bool IsClientBlocked(IPEndPoint client)
+        public bool IsClientBlocked(Client client)
         {
-            var blacklist = settings.Element("settings").Element("clients").Element("blacklist");
-            foreach (var blockedClient in blacklist.Elements())
-            {
-                if (blockedClient.Element("ip").Value == client.Address.ToString() &&
-                    blockedClient.Element("name").Value == getHostname(client))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return client.Allowed;
         }
 
         public List<SharedFolder> GetSharedFolders()

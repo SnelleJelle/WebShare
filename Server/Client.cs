@@ -21,6 +21,14 @@ namespace WebShare.Server
             IP = ip;
         }
 
+        public static Client FromEndpoint(string ip)
+        {
+
+            return new Client
+            {
+                IP = ip
+        }
+
         public override string ToString()
         {
             return IP;

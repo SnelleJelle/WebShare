@@ -18,17 +18,18 @@ namespace WebShare
 
             int port = 8080;
             server = new HttpServer(port);
-            server.OnPermissionPrompt += onPermissionPromp;
+            server.OnPermissionPrompt += onPermissionPrompt;
             server.Start();
             Debug.WriteLine("Starting HTTP server on port " + port);
             fillLists();
         }
 
-        private void onPermissionPromp(object sender, PermissionEventArgs e)
+        private void onPermissionPrompt(object sender, PermissionEventArgs e)
         {
             string host = "no hostname found for this client";
             try
             {
+                
                 host = Dns.GetHostEntry(e.Client.Address).HostName;
             }
             catch (SocketException se) {}
