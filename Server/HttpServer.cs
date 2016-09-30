@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Net.Sockets;
-using System.Net;
 using System.IO;
+using System.Net;
 using System.Threading;
-using System.Diagnostics;
 using System.Xml.Linq;
 using WebShare.Server.ContentListing;
 using WebShare.Server.Error;
-using System.Windows.Forms;
+using WebShare.Server.Util.FireWall;
 using WebShare.Server.Settings;
-using NetFwTypeLib;
-using WebShare.Server.FireWall;
-using System.IO.Compression;
+using WebShare.Server.Util.Zip;
+using WebShare.Util.Server;
 
 namespace WebShare.Server
 {
@@ -25,7 +20,6 @@ namespace WebShare.Server
 
         private static string defaultMime = "application/octet-stream";
         private static string mimesPath = @"Server\mimes.xml";
-        private static string zipCachePath = @"Cache\zip";
 
         private IDictionary<string, string> mimeTypes { get; set; }
         private HttpListener listener;
@@ -136,8 +130,9 @@ namespace WebShare.Server
                 else if (request.IsZipRequest())
                 {
                     Logger.Log("Requested: " + requestedPath + " -> Serving zip");
-                    string fullDirPath = request.FullPath;
-                    serveFile(Zip(fullDirPath), context);
+                    string folderPath = request.FullPath;
+                    string zipPath = new Zip(folderPath).Create();
+                    serveFile(zipPath, context);
                 }
                 else
                 {
@@ -145,16 +140,6 @@ namespace WebShare.Server
                     serveError(404, context);
                 }
             }
-        }
-
-        public string Zip(string directoryPath)
-        {
-            string zipFileName = directoryPath.Split('\\').Last();
-            zipFileName += DateTime.Now.ToString("_MM_dd_yy_HH_mm_ss") + ".zip";
-            string zipCacheFilePath = Path.Combine(zipCachePath, zipFileName);
-            Logger.Log("Zipping directory" + directoryPath + " -> to file: " + zipCacheFilePath);
-            ZipFile.CreateFromDirectory(directoryPath, zipCacheFilePath, CompressionLevel.Optimal, true);
-            return zipCacheFilePath;
         }
 
         private void promptPermissionFor(IPEndPoint client)
