@@ -132,7 +132,8 @@ namespace WebShare.Server
                     Logger.Log("Requested: " + requestedPath + " -> Serving zip");
                     string folderPath = request.FullPath;
                     string zipPath = new Zip(folderPath).Create();
-                    serveFile(zipPath, context);
+                    Action removeZipFile = () => RemoveZip.RemoveFile(zipPath);
+                    serveFile(zipPath, context, removeZipFile);
                 }
                 else
                 {
@@ -140,6 +141,10 @@ namespace WebShare.Server
                     serveError(404, context);
                 }
             }
+        }
+
+        public void myCallback(string str)
+        {
         }
 
         private void promptPermissionFor(IPEndPoint client)
@@ -186,8 +191,14 @@ namespace WebShare.Server
             }
 
             context.Response.OutputStream.Close();
-        }      
-        
+        }
+
+        private void serveFile(string fullFilePath, HttpListenerContext context, Action after)
+        {
+            serveFile(fullFilePath, context);
+            after();
+        }
+
         private void serveError(int errorCode, HttpListenerContext context)
         {
             Stream error = new ErrorMessage(errorCode).getStream();
