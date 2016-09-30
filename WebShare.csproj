@@ -92,6 +92,7 @@
     <Compile Include="Server\Settings\SettingsManager.cs" />
     <Compile Include="Server\SharedFolder.cs" />
     <Compile Include="Server\TemplateGenerator.cs" />
+    <Compile Include="Server\Util\Zip\RemoveZip.cs" />
     <Compile Include="Server\Util\Zip\Zip.cs" />
     <Compile Include="WebShare.cs">
       <SubType>Form</SubType>
