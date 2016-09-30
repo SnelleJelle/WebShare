@@ -31,7 +31,7 @@ namespace WebShare.Server.Util.Zip
             watch.Start();
             using (ZipArchive zip = ZipFile.Open(zipCacheFilePath, ZipArchiveMode.Create))
             {
-                Logger.Log("Zipping directory" + SourceDirectory + " -> to file: " + zipCacheFilePath);
+                Logger.Log("Zipping files from " + SourceDirectory + " -> to file: " + zipCacheFilePath);
                 foreach (string filePath in Directory.GetFiles(SourceDirectory))
                 {
                     string fileName = filePath.Split('\\').Last();
