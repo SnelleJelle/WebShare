@@ -10,6 +10,7 @@ using WebShare.Server.Util.FireWall;
 using WebShare.Server.Settings;
 using WebShare.Server.Util.Zip;
 using WebShare.Util.Server;
+using System.IO.Compression;
 
 namespace WebShare.Server
 {
@@ -178,6 +179,9 @@ namespace WebShare.Server
                 context.Response.ContentType = mimeTypes.TryGetValue(fileExtension, out mime) ? mime : defaultMime;
                     
                 context.Response.AddHeader("Last-Modified", File.GetLastWriteTime(fullFilePath).ToString("r"));
+                context.Response.AddHeader("Content-Description", "File Transfer");
+                context.Response.AddHeader("Content-Transfer-Encoding", "binary");
+                context.Response.AddHeader("Content-Description", "File Transfer");
 
                 serveStream(input, context);
             }
