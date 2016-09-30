@@ -143,10 +143,6 @@ namespace WebShare.Server
             }
         }
 
-        public void myCallback(string str)
-        {
-        }
-
         private void promptPermissionFor(IPEndPoint client)
         {
             OnPermissionPrompt(this, new PermissionEventArgs { Client = client});            
