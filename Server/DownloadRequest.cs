@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,14 +14,11 @@ namespace WebShare.Server
         public string Command { get; set; }
         public string FolderAlias { get; set; }
         public string FileName { get; set; }
+        public string FullPath { get; private set; } = "";
 
         public static string WebRequest = "web";
         public static string FileRequest = "download";
-
-        public DownloadRequest()
-        {
-
-        }
+        public static string ZipRequest = "zip";
 
         public DownloadRequest(string request)
         {
@@ -34,6 +32,12 @@ namespace WebShare.Server
                 Command = WebRequest;
                 FileName = split[1];
             }
+            else if (split.Length == 2 && split[0].ToLower() == ZipRequest)
+            {
+                Command = ZipRequest;            
+                FileName = split[1];
+                FolderAlias = FileName;
+            }
             else if (split.Length == 3 && split[0].ToLower() == FileRequest)
             {
                 Command = FileRequest;
@@ -42,7 +46,7 @@ namespace WebShare.Server
             }
             else
             {
-                throw new ArgumentException("the request doesn't fit the expected format: /download/{folderName}/{fileName} or /web/{favicon.ico | style.css | script.js}");
+                throw new ArgumentException("the request doesn't fit the expected format: /download/{folderName}/{fileName} or /web/{favicon.ico | style.css | script.js} or /zip/{folderName}");
             }
         }
 
@@ -54,6 +58,34 @@ namespace WebShare.Server
         public bool IsWebRequest()
         {
             return Command == WebRequest;
+        }
+
+        public bool IsZipRequest()
+        {
+            return Command == ZipRequest;
+        }
+
+        public DownloadRequest WithSharedFolders(List<SharedFolder> sharedFolders)
+        {
+            foreach (SharedFolder folder in sharedFolders)
+            {
+                if (folder.Alias == this.FolderAlias)
+                {
+                    if (Command == WebRequest)
+                    {
+                        FullPath = Path.Combine(WebRequest, FileName);
+                    }
+                    if (Command == ZipRequest)
+                    {
+                        FullPath = folder.Path;
+                    }
+                    if (Command == FileRequest)
+                    {
+                        FullPath = Path.Combine(folder.Path, this.FileName);
+                    }
+                }
+            }
+            return this;
         }
     }
 }

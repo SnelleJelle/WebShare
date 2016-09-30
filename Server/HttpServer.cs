@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Net.Sockets;
-using System.Net;
 using System.IO;
+using System.Net;
 using System.Threading;
-using System.Diagnostics;
 using System.Xml.Linq;
 using WebShare.Server.ContentListing;
 using WebShare.Server.Error;
-using System.Windows.Forms;
+using WebShare.Server.Util.FireWall;
 using WebShare.Server.Settings;
-using NetFwTypeLib;
-using WebShare.Server.FireWall;
+using WebShare.Server.Util.Zip;
+using WebShare.Util.Server;
 
 namespace WebShare.Server
 {
@@ -119,16 +115,24 @@ namespace WebShare.Server
             }
             else
             {
-                DownloadRequest request = new DownloadRequest(requestedPath);
+                DownloadRequest request = new DownloadRequest(requestedPath).WithSharedFolders(SharedFolders);
 
                 if (request.IsFileRequest() && fileIsShared(request))
                 {
                     Logger.Log("Requested: " + requestedPath + " -> Serving file");
-                    serveFile(getFullFilePath(request), context);
+                    serveFile(request.FullPath, context);
                 }
                 else if (request.IsWebRequest())
                 {
+                    Logger.Log("Requested: " + requestedPath + " -> Serving web file");
                     serveFile("/Web/" + request.FileName, context);
+                }
+                else if (request.IsZipRequest())
+                {
+                    Logger.Log("Requested: " + requestedPath + " -> Serving zip");
+                    string folderPath = request.FullPath;
+                    string zipPath = new Zip(folderPath).Create();
+                    serveFile(zipPath, context);
                 }
                 else
                 {
@@ -216,18 +220,6 @@ namespace WebShare.Server
                 }
             }
             return false;
-        }
-
-        private string getFullFilePath(DownloadRequest request)
-        {
-            foreach (SharedFolder folder in SharedFolders)
-            {
-                if (folder.Alias == request.FolderAlias)
-                {
-                    return Path.Combine(folder.Path, request.FileName);
-                }
-            }
-            return "";
         }
 
         public void AddSharedFolders(params SharedFolder[] folders)

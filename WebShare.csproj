@@ -60,6 +60,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -77,19 +79,20 @@
     <Compile Include="Server\ContentListing\ContentLister.cs" />
     <Compile Include="Server\DownloadRequest.cs" />
     <Compile Include="Server\Error\ErrorMessage.cs" />
-    <Compile Include="Server\FireWall\FirewallManager.cs" />
-    <Compile Include="Server\Logging\FileLogger.cs" />
-    <Compile Include="Server\Logging\frmLoggingConsole.cs">
+    <Compile Include="Server\Util\FireWall\FirewallManager.cs" />
+    <Compile Include="Server\Util\Logging\FileLogger.cs" />
+    <Compile Include="Server\Util\Logging\frmLoggingConsole.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Server\Logging\frmLoggingConsole.Designer.cs">
+    <Compile Include="Server\Util\Logging\frmLoggingConsole.Designer.cs">
       <DependentUpon>frmLoggingConsole.cs</DependentUpon>
     </Compile>
-    <Compile Include="Server\Logging\ILoggerTarget.cs" />
-    <Compile Include="Server\Logging\Logger.cs" />
+    <Compile Include="Server\Util\Logging\ILoggerTarget.cs" />
+    <Compile Include="Server\Util\Logging\Logger.cs" />
     <Compile Include="Server\Settings\SettingsManager.cs" />
     <Compile Include="Server\SharedFolder.cs" />
     <Compile Include="Server\TemplateGenerator.cs" />
+    <Compile Include="Server\Util\Zip\Zip.cs" />
     <Compile Include="WebShare.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -99,7 +102,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Server\HttpServer.cs" />
-    <EmbeddedResource Include="Server\Logging\frmLoggingConsole.resx">
+    <EmbeddedResource Include="Server\Util\Logging\frmLoggingConsole.resx">
       <DependentUpon>frmLoggingConsole.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WebShare.resx">
@@ -131,7 +134,7 @@
     <Content Include="Server\Error\Error403.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Server\Logging\log.txt">
+    <Content Include="Server\Util\Logging\log.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Server\Settings\settings.xml">

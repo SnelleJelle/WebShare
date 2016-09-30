@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WebShare.Server.Logging
+namespace WebShare.Server.Util.Logging
 {
     public partial class frmLoggingConsole : Form, ILoggerTarget
     {

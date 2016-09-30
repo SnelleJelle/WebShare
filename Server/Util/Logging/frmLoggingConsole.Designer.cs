@@ -1,4 +1,4 @@
-﻿namespace WebShare.Server.Logging
+﻿namespace WebShare.Server.Util.Logging
 {
     partial class frmLoggingConsole
     {
